@@ -1,37 +1,40 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
 
-import { NewAppScreen } from '@react-native/new-app-screen';
 import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
 import {
   SafeAreaProvider,
-  useSafeAreaInsets,
 } from 'react-native-safe-area-context';
+import Home from './src/page/Home';
+import { useEffect, useState } from 'react';
+import { createTables, getDbConnection, getProducts, insertSampleDb } from './src/database/dbService';
+import { Product } from './src/type/ProductType';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const initDb = async () => {
+      const db = await getDbConnection();
+      await createTables(db);
+      await insertSampleDb(db);
+      const products = await getProducts(db);
+      setProducts(products);
+    }
+    initDb();
+  }, []);
 
   return (
     <SafeAreaProvider>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
+      <AppContent product={products} />
     </SafeAreaProvider>
   );
 }
 
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-
+function AppContent({product}: any) {
   return (
     <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
+      <Home products={product} />
     </View>
   );
 }
