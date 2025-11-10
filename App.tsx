@@ -1,5 +1,5 @@
 
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
+import { StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native';
 import {
   SafeAreaProvider,
 } from 'react-native-safe-area-context';
@@ -7,6 +7,8 @@ import Home from './src/page/Home';
 import { useEffect, useState } from 'react';
 import { createTables, getDbConnection, getProducts, insertSampleDb } from './src/database/dbService';
 import { Product } from './src/type/ProductType';
+import Banner from './src/component/Banner';
+import NavigationBar from './src/component/NavigationBar';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -31,9 +33,11 @@ function App() {
   );
 }
 
-function AppContent({product}: any) {
+function AppContent({ product }: any) {
   return (
     <View style={styles.container}>
+      <NavigationBar />
+      <Banner />
       <Home products={product} />
     </View>
   );
