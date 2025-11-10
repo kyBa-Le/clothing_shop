@@ -1,5 +1,6 @@
 import SQLite from 'react-native-sqlite-storage';
 import {productsData} from './productData';
+import { Product } from '../type/ProductType';
 
 SQLite.enablePromise(true);
 
@@ -7,14 +8,14 @@ export const getDbConnection = async () => {
   return SQLite.openDatabase({ name: 'clothing_app.db', location: 'default' });
 };
 
-export const createTables = async (db) => {
+export const createTables = async (db: SQLite.SQLiteDatabase) => {
   const query = await db.executeSql(
     'CREATE TABLE IF NOT EXISTS products (id INTEGER AUTO INCREMENT PRIMARY KEY, name TEXT NOT NULL, price DOUBLE NOT NULL, image TEXT NOT NULL);',
   );
   console.log("Create table: ", query);
 };
 
-export const insertSampleDb = async db => {
+export const insertSampleDb = async (db: SQLite.SQLiteDatabase) => {
   const existing = await db.executeSql(
     'SELECT COUNT(*) as count FROM products',
   );
@@ -31,9 +32,9 @@ export const insertSampleDb = async db => {
   }
 };
 
-export const getProducts = async db => {
+export const getProducts = async (db: SQLite.SQLiteDatabase)=> {
   const results = await db.executeSql('SELECT * FROM products');
-  const products = [];
+  const products: Product[] = [];
   results.forEach(result => {
     for (let i = 0; i < result.rows.length; i++) {
       products.push(result.rows.item(i));

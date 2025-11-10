@@ -16,7 +16,6 @@ const CARD_WIDTH = (screenWidth - CARD_MARGIN * (numberOfColumns + 1)) / numberO
 const Home = ({ products }: any) => {
     return (
         <View style={styles.container}>
-            <Text style={styles.header}>Home Page</Text>
             <FlatList
                 data={products}
                 numColumns={numberOfColumns}

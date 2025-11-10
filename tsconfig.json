@@ -1,5 +1,5 @@
 {
   "extends": "@react-native/typescript-config",
-  "include": ["**/*.ts", "**/*.tsx", "src/database/dbService.js"],
+  "include": ["**/*.ts", "**/*.tsx", "src/database/dbService.ts"],
   "exclude": ["**/node_modules", "**/Pods"]
 }
