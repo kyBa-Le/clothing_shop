@@ -15,7 +15,7 @@ const Banner = () => {
 
 const styles = StyleSheet.create({
     container: {
-        marginBottom: 30
+        marginBottom: 5
     },
     content: {
         position: 'absolute',
@@ -27,8 +27,6 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 150,
         resizeMode: 'cover',
-        
-        
     }
 })
 

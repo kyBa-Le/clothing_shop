@@ -1,11 +1,14 @@
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import { StyleSheet, Text, Touchable, TouchableOpacity, View } from "react-native"
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+import { RootStackParamList } from "../../App";
 
 
 const NavigationBar = () => {
 
     const [show, setShow] = useState(false);
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
     const handleToggle = () => {
         setShow(!show);
@@ -13,16 +16,22 @@ const NavigationBar = () => {
 
     return (
         <View style={styles.container}>
-            {show ? 
+            {!show ? 
                 <TouchableOpacity onPress={handleToggle}>
-                    <FontAwesome6 name="bars" size={18} color="rgba(0, 0, 0, 1)" />;
+                    <FontAwesome6 name="bars" size={18} color="rgba(0, 0, 0, 1)" />
                 </TouchableOpacity> 
                 :
                 <View >
-                    <TouchableOpacity >
+                    <TouchableOpacity onPress={() => {
+                        navigation.navigate('Home');
+                        handleToggle();
+                    }} >
                         <Text style={styles.navigationItem}>Trang chủ</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity >
+                    <TouchableOpacity onPress={() => {
+                        navigation.navigate('Category');
+                        handleToggle();
+                    }}>
                         <Text style={styles.navigationItem}>Danh mục sản phẩm</Text>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={handleToggle}>
