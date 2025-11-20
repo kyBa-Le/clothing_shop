@@ -1,7 +1,7 @@
 import SQLite, { SQLiteDatabase } from 'react-native-sqlite-storage';
 import {createProductTable, insertSampleProducts} from './productData';
-import { Product } from '../type/ProductType';
 import { createCategoryTable, insertSampleCategories } from './categoryData';
+import { createUserTable, insertSampleUsers } from './userData';
 
 SQLite.enablePromise(true);
 
@@ -12,10 +12,12 @@ export const getDbConnection = async () => {
 export const createTables = async (db: SQLiteDatabase) => {
   await createCategoryTable(db);
   await createProductTable(db);
+  await createUserTable(db);
 };
 
 export const insertSampleDb = async (db: SQLiteDatabase) => {
   await insertSampleCategories(db);
   await insertSampleProducts(db);
+  await insertSampleUsers(db);
 };
 

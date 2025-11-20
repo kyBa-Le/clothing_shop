@@ -8,7 +8,7 @@ const Banner = () => {
                 <Text style={{color: "#fd7f44ff", fontWeight: "bold", fontSize: 22}}>GIẢM 50%</Text>
                 <Text style={{color: "white", fontWeight: "bold"}}>CHO ĐƠN HÀNG TRÊN 500K</Text>
             </View>
-            <Image source={require('../assest/banner.jpg')} style={styles.image} />
+            <Image source={require('../asset/banner.jpg')} style={styles.image} />
         </View>
     )
 }
