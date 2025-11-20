@@ -7,9 +7,10 @@ export const login = async (username: string, password: string) => {
     if (user) {
         await AsyncStorage.setItem(LOGGED_IN_USER_KEY, JSON.stringify(user.id));
         await AsyncStorage.setItem(LOGGED_IN_ROLE_KEY, user.role);
+        return true;
     } else {
         Alert.alert("Lỗi đăng nhập", "Tên đăng nhập hoặc mật khẩu không đúng.");
-        return null;
+        return false;
     }
 }
 

@@ -63,8 +63,8 @@ const NavigationBar = () => {
                     {isLoggedIn ? (
                         <MenuItem onPress={handleLogout}>Đăng xuất</MenuItem>
                     ) : (
-                        <MenuItem onPress={() => navigateAndClose('SignUp')}>
-                            Đăng ký
+                        <MenuItem onPress={() => navigateAndClose('Login')}>
+                            Đăng nhập
                         </MenuItem>
                     )}
 
