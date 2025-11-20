@@ -81,6 +81,7 @@ const styles = StyleSheet.create({
     },
     row: {
         justifyContent: "space-between",
+        gap: 10,
     },
 })
 
