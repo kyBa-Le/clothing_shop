@@ -6,7 +6,7 @@ const UserLayout = ({children}: {children: React.ReactNode}) => {
     return (
         <View style={{flex: 1}}>
             <NavigationBar/>
-            <View style={{height: 40, justifyContent: 'center', alignItems: "flex-end", backgroundColor: '#ffffff'}}>
+            <View style={{height: 40, justifyContent: 'center', alignItems: "flex-end", backgroundColor: 'transparent'}}>
                 <Text style={{marginHorizontal: 20, fontWeight: 'bold'}}>Home</Text>
             </View>
             {children}

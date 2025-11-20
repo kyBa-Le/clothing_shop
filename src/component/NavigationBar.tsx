@@ -1,69 +1,124 @@
-import { NavigationProp, useNavigation } from "@react-navigation/native";
-import { useState } from "react";
-import { StyleSheet, Text, Touchable, TouchableOpacity, View } from "react-native"
+import React, { useState } from 'react';
+import {
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-import { RootStackParamList } from "../../App";
 
+import { RootStackParamList } from '../../App';
+import { isUserLoggedIn, logout } from '../service/AuthService';
+import type { NavigationProp } from '@react-navigation/native';
 
 const NavigationBar = () => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    const [show, setShow] = useState(false);
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-    const handleToggle = () => {
-        setShow(!show);
-    }
+    useFocusEffect(() => {
+        const checkLoginStatus = async () => {
+            const loggedIn = await isUserLoggedIn();
+            console.log('User logged in status:', loggedIn);
+            setIsLoggedIn(loggedIn);
+        };
+        checkLoginStatus();
+    });
+
+    const toggleMenu = () => setIsMenuOpen(prev => !prev);
+
+    const navigateAndClose = (screen: keyof RootStackParamList) => {
+        navigation.navigate(screen);
+        setIsMenuOpen(false);
+    };
+
+    const handleLogout = async () => {
+        await logout();
+        setIsLoggedIn(false);
+        setIsMenuOpen(false);
+    };
 
     return (
         <View style={styles.container}>
-            {!show ? 
-                <TouchableOpacity onPress={handleToggle}>
-                    <FontAwesome6 name="bars" size={18} color="rgba(0, 0, 0, 1)" />
-                </TouchableOpacity> 
-                :
-                <View >
-                    <TouchableOpacity onPress={() => {
-                        navigation.navigate('Home');
-                        handleToggle();
-                    }} >
-                        <Text style={styles.navigationItem}>Trang chủ</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => {
-                        navigation.navigate('Category');
-                        handleToggle();
-                    }}>
-                        <Text style={styles.navigationItem}>Danh mục sản phẩm</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={handleToggle}>
-                        <Text style={styles.navigationItem}>Đóng</Text>
-                    </TouchableOpacity>
-                </View>
-            }
-            
+            {!isMenuOpen ? (
+                <TouchableOpacity
+                    onPress={toggleMenu}
+                    accessibilityLabel="Mở menu điều hướng"
+                    accessibilityRole="button">
+                    <FontAwesome6 name="bars" size={22} color="white" />
+                </TouchableOpacity>
+            ) : (
+                <View style={styles.menu}>
+                    {/* Menu Items */}
+                    <MenuItem onPress={() => navigateAndClose('Home')}>
+                        Trang chủ
+                    </MenuItem>
 
-            
+                    <MenuItem onPress={() => navigateAndClose('Category')}>
+                        Danh mục sản phẩm
+                    </MenuItem>
+
+                    {isLoggedIn ? (
+                        <MenuItem onPress={handleLogout}>Đăng xuất</MenuItem>
+                    ) : (
+                        <MenuItem onPress={() => navigateAndClose('SignUp')}>
+                            Đăng ký
+                        </MenuItem>
+                    )}
+
+                    <MenuItem onPress={toggleMenu}>
+                        Đóng
+                    </MenuItem>
+                </View>
+            )}
         </View>
-    )
-}
+    );
+};
+
+const MenuItem: React.FC<{
+    onPress: () => void;
+    children: string;
+    style?: object;
+}> = ({ onPress, children, style }) => (
+    <TouchableOpacity
+        onPress={onPress}
+        style={[styles.menuItem, style]}
+        accessibilityRole="button"
+        accessibilityLabel={children}>
+        <Text style={[styles.menuText, style]}>{children}</Text>
+    </TouchableOpacity>
+);
 
 const styles = StyleSheet.create({
     container: {
         position: 'absolute',
         top: 5,
-        left: 10,
+        left: 12,
         zIndex: 999,
-        paddingHorizontal: 10,
-        paddingVertical: 3,
-        backgroundColor: '#ffe4e4ff',
-        borderRadius: 2,
+        backgroundColor: '#f89898ff',
+        borderRadius: 8,
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        elevation: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
     },
-    navigationItem: {
-        color: "rgba(0, 0, 0, 1)",
-        fontWeight: "bold",
-        fontSize: 14,
+    menu: {
+        minWidth: 180,
+    },
+    menuItem: {
         paddingVertical: 10,
-    }
-
-})
+        paddingHorizontal: 4,
+    },
+    menuText: {
+        color: 'white',
+        fontSize: 15,
+        fontWeight: '600',
+    },
+});
 
 export default NavigationBar;
