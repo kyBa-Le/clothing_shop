@@ -72,7 +72,7 @@ const SignUp = () => {
             </TouchableOpacity>
             <View style={styles.loginRow}>
                 <Text style={styles.loginText}>Đã có tài khoản?</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('Login' as never)}>
                     <Text style={styles.loginLink}> Đăng nhập</Text>
                 </TouchableOpacity>
             </View>
