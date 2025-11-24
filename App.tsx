@@ -6,12 +6,14 @@ import Category from './src/page/Category';
 import UserLayout from './src/layout/UserLayout';
 import SignUp from './src/page/SignUp';
 import Login from './src/page/Login';
+import Search from './src/page/Search';
 
 export type RootStackParamList = {
   Home: undefined;
   Category: undefined;
   SignUp: undefined;
   Login: undefined;
+  Search: { searchQuery: string };
 }
 
 function App() {
@@ -25,6 +27,7 @@ function App() {
             <Stack.Screen name="Category" component={Category} options={{ headerShown: false }} />
             <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false}} />
             <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+            <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />
           </Stack.Navigator>
         </UserLayout>
     </NavigationContainer>

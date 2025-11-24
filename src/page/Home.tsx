@@ -4,18 +4,15 @@ import {
     View,
     FlatList,
     StyleSheet,
-    Dimensions,
 } from "react-native";
 import ProductCard from "../component/ProductCard";
 import Banner from "../component/Banner";
 import { Product } from "../type/ProductType";
 import { createTables, getDbConnection, insertSampleDb } from "../database/dbService";
 import { getProducts } from "../service/ProductService";
+import { CARD_MARGIN, CARD_WIDTH, numberOfColumns } from "../constant/CardConstant";
+import { LIST_COLUMN_WRAPPER_STYLE, LIST_CONTENT_CONTAINER_STYLE } from "../constant/ListCardConstant";
 
-const screenWidth = Dimensions.get("window").width;
-export const numberOfColumns = 2;
-export const CARD_MARGIN = 10;
-export const CARD_WIDTH = (screenWidth - CARD_MARGIN * (numberOfColumns + 1)) / numberOfColumns;
 
 const Home = () => {
     const [products, setProducts] = useState<Product[]>([]);
@@ -43,8 +40,8 @@ const Home = () => {
                         <ProductCard item={item} cardMargin={CARD_MARGIN} cardWidth={CARD_WIDTH} />
                     )}
                     keyExtractor={(_, index) => index.toString()}
-                    columnWrapperStyle={styles.row}
-                    contentContainerStyle={styles.list}
+                    columnWrapperStyle={LIST_COLUMN_WRAPPER_STYLE}
+                    contentContainerStyle={LIST_CONTENT_CONTAINER_STYLE}
                 />
             </View>
         </View>
@@ -65,12 +62,5 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginBottom: 10,
         color: "#333",
-    },
-    list: {
-        paddingHorizontal: CARD_MARGIN,
-        paddingBottom: 20,
-    },
-    row: {
-        justifyContent: "space-between",
     },
 });

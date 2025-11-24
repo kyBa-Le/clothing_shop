@@ -29,7 +29,7 @@ const NavigationBar = () => {
 
     const toggleMenu = () => setIsMenuOpen(prev => !prev);
 
-    const navigateAndClose = (screen: keyof RootStackParamList) => {
+    const navigateAndClose = (screen: Exclude<keyof RootStackParamList, 'Search'>) => {
         navigation.navigate(screen);
         setIsMenuOpen(false);
     };
