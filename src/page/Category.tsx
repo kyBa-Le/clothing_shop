@@ -5,7 +5,8 @@ import { getCategories } from "../service/CategoryService";
 import { Product } from "../type/ProductType";
 import { getProductsByCategory } from "../service/ProductService";
 import ProductCard from "../component/ProductCard";
-import { CARD_MARGIN, CARD_WIDTH, numberOfColumns } from "./Home";
+import { CARD_MARGIN, CARD_WIDTH, numberOfColumns } from "../constant/CardConstant";
+import { LIST_COLUMN_WRAPPER_STYLE, LIST_CONTENT_CONTAINER_STYLE } from "../constant/ListCardConstant";
 
 const Category = () => {
     const [categories, setCategories] = useState<CategoryType[]>([]);
@@ -54,8 +55,8 @@ const Category = () => {
                 )}
                 numColumns={numberOfColumns}
                 keyExtractor={(_, index) => index.toString()}
-                columnWrapperStyle={styles.row}
-                contentContainerStyle={styles.list}
+                columnWrapperStyle={LIST_COLUMN_WRAPPER_STYLE}
+                contentContainerStyle={LIST_CONTENT_CONTAINER_STYLE}
             />
         </View>
     )
@@ -74,15 +75,7 @@ const styles = StyleSheet.create({
         padding: 10,
         margin: 5,
         borderRadius: 30,
-    },
-    list: {
-        paddingHorizontal: CARD_MARGIN,
-        paddingBottom: 20,
-    },
-    row: {
-        justifyContent: "space-between",
-        gap: 10,
-    },
+    }
 })
 
 export default Category;
