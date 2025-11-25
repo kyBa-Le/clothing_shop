@@ -7,6 +7,7 @@ import UserLayout from './src/layout/UserLayout';
 import SignUp from './src/page/SignUp';
 import Login from './src/page/Login';
 import Search from './src/page/Search';
+import BottomTab from './src/component/BottomTab';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -23,7 +24,7 @@ function App() {
     <NavigationContainer> 
         <UserLayout>
           <Stack.Navigator initialRouteName='Home'>
-            <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
+            <Stack.Screen name="Home" component={BottomTab} options={{ headerShown: false }} />
             <Stack.Screen name="Category" component={Category} options={{ headerShown: false }} />
             <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false}} />
             <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
