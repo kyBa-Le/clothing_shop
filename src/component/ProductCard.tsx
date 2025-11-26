@@ -1,5 +1,7 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Product } from "../type/ProductType";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "../../App";
 
 type ProductCardProps = {
     item: Product;
@@ -8,8 +10,9 @@ type ProductCardProps = {
 }
 
 const ProductCard = ({ item, cardMargin, cardWidth }: ProductCardProps) => {
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     return (
-        <TouchableOpacity style={[styles.card, { "width": cardWidth, "marginBottom": cardMargin }]} activeOpacity={0.8}>
+        <TouchableOpacity onPress={() => navigation.navigate({ name: "Detail" , params: {item}})} style={[styles.card, { "width": cardWidth, "marginBottom": cardMargin }]} activeOpacity={0.8}>
             <Image source={{ uri: item.image }} style={[styles.image, { "height": cardWidth }]} />
             <View style={styles.infoContainer}>
                 <Text style={styles.name} numberOfLines={1}>

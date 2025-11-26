@@ -24,13 +24,14 @@ const Login = () => {
         if (!username.trim() || !password.trim()) {
             Alert.alert("Lỗi", "Vui lòng nhập đầy đủ tên người dùng và mật khẩu!");
             return;
-        }
-
+        } 
         setLoading(true);
         try {
             const success = await login(username.trim(), password);
             if (success) {
-                navigation.navigate("Home");
+                navigation.navigate("Main");
+            } else {
+                Alert.alert("Lỗi đăng nhập", "Tên đăng nhập hoặc mật khẩu không đúng.");
             }
         } catch (error) {
             Alert.alert("Lỗi", "Đã có lỗi xảy ra. Vui lòng thử lại sau.");
