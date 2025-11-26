@@ -16,7 +16,7 @@ export type RootStackParamList = {
   SignUp: undefined;
   Login: undefined;
   Search: { searchQuery: string };
-  Detail: {product: Product};
+  Detail: { item: Product };
 }
 
 function App() {
@@ -31,7 +31,7 @@ function App() {
             <Stack.Screen name="Main" component={BottomTab} options={{ headerShown: false }} />
             <Stack.Screen name="Category" component={Category} options={{ headerShown: false }} />
             <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />
-          <Stack.Screen name="Detail" component={ProductDetails} options={{ headerShown: false }} />
+            <Stack.Screen name="Detail" component={ProductDetails} options={{ headerShown: false }} />
           </Stack.Navigator>
         </UserLayout>
     </NavigationContainer>

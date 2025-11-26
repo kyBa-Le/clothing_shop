@@ -29,7 +29,7 @@ const NavigationBar = () => {
 
     const toggleMenu = () => setIsMenuOpen(prev => !prev);
 
-    const navigateAndClose = (screen: Exclude<keyof RootStackParamList, 'Search'>) => {
+    const navigateAndClose = (screen: Exclude<keyof RootStackParamList, 'Search'| 'Detail'>) => {
         navigation.navigate(screen);
         setIsMenuOpen(false);
     };
@@ -51,15 +51,6 @@ const NavigationBar = () => {
                 </TouchableOpacity>
             ) : (
                 <View style={styles.menu}>
-                    {/* Menu Items */}
-                    <MenuItem onPress={() => navigateAndClose('Home')}>
-                        Trang chủ
-                    </MenuItem>
-
-                    <MenuItem onPress={() => navigateAndClose('Category')}>
-                        Danh mục sản phẩm
-                    </MenuItem>
-
                     {isLoggedIn ? (
                         <MenuItem onPress={handleLogout}>Đăng xuất</MenuItem>
                     ) : (
