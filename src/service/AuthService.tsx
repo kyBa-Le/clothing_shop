@@ -1,6 +1,7 @@
 import { Alert } from "react-native";
 import { getUser, getUserById } from "./UserService";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { UserType } from "../type/UserType";
 
 export const login = async (username: string, password: string) => {
     const user = await getUser({username, password});
@@ -12,15 +13,12 @@ export const login = async (username: string, password: string) => {
     return false;
 }
 
-export const isUserLoggedIn = async (): Promise<boolean> => {
+export const isUserLoggedIn = async (): Promise<UserType | null> => {
     const userId = await AsyncStorage.getItem(LOGGED_IN_USER_KEY);
-    if (!userId) return false;
+    if (!userId) return null;
     const user = await getUserById(Number(userId));
     console.log("Logged in user:", user);
-    if(user) {
-        return true;
-    }
-    return false;
+    return user;
 }
 
 export const logout = async () => {

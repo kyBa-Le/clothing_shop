@@ -1,7 +1,6 @@
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Category from './src/page/Category';
 import UserLayout from './src/layout/UserLayout';
 import SignUp from './src/page/SignUp';
 import Login from './src/page/Login';
@@ -29,7 +28,6 @@ function App() {
             <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
             <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
             <Stack.Screen name="Main" component={BottomTab} options={{ headerShown: false }} />
-            <Stack.Screen name="Category" component={Category} options={{ headerShown: false }} />
             <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />
             <Stack.Screen name="Detail" component={ProductDetails} options={{ headerShown: false }} />
           </Stack.Navigator>
