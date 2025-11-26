@@ -22,7 +22,7 @@ const NavigationBar = () => {
         const checkLoginStatus = async () => {
             const loggedIn = await isUserLoggedIn();
             console.log('User logged in status:', loggedIn);
-            setIsLoggedIn(loggedIn);
+            setIsLoggedIn(loggedIn ? true : false);
         };
         checkLoginStatus();
     });

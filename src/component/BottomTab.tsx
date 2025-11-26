@@ -2,6 +2,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../page/Home';
 import Category from '../page/Category';
 import FontAwesome6Icon from 'react-native-vector-icons/FontAwesome6';
+import Profile from '../page/Profile';
 
 const Tab = createBottomTabNavigator();
 
@@ -19,6 +20,9 @@ const BottomTab = () => {
                         case 'Category':
                             iconName = 'list';
                             break;
+                        case 'Profile':
+                            iconName = 'user';
+                            break;
                         default:
                             iconName = 'circle-question';
                     }
@@ -32,6 +36,7 @@ const BottomTab = () => {
         >
             <Tab.Screen name="Home" component={Home} />
             <Tab.Screen name="Category" component={Category} />
+            <Tab.Screen name='Profile' component={Profile} />
         </Tab.Navigator>
     );
 }
