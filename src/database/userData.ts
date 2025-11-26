@@ -11,6 +11,11 @@ const sampleUsersData = [
         password: 'password2',
         role: 'customer'
     },
+    {
+        username: 'admin',
+        password: 'admin',
+        role: 'admin'
+    }
 ];
     
 export const createUserTable = async (db: SQLiteDatabase) => {
