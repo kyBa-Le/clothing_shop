@@ -29,7 +29,7 @@ const NavigationBar = () => {
 
     const toggleMenu = () => setIsMenuOpen(prev => !prev);
 
-    const navigateAndClose = (screen: Exclude<keyof RootStackParamList, 'Search'| 'Detail'>) => {
+    const navigateAndClose = (screen: Exclude<keyof RootStackParamList, 'Search' | 'Detail'>) => {
         navigation.navigate(screen);
         setIsMenuOpen(false);
     };
@@ -53,6 +53,9 @@ const NavigationBar = () => {
                 </TouchableOpacity>
             ) : (
                 <View style={styles.menu}>
+                    <MenuItem onPress={() => navigation.navigate('Main')}>
+                        Trang chủ
+                    </MenuItem>
                     {isLoggedIn ? (
                         <MenuItem onPress={handleLogout}>Đăng xuất</MenuItem>
                     ) : (
