@@ -32,7 +32,7 @@ const SignUp = () => {
 
         await createUser({username, password, role: 'customer'});
         await login(username, password);
-        navigation.navigate('Home' as never);
+        navigation.navigate('Main' as never);
     };
 
     return (

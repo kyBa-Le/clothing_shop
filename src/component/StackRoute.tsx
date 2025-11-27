@@ -52,7 +52,7 @@ const AppRoute = () => {
     return (
         <NavigationContainer>
             {
-                user?.role === 'admin' ? <AdminRoute /> : <UserRoute />
+                user && user.role === 'admin' ? <AdminRoute /> : <UserRoute />
             }
         </NavigationContainer>
     )

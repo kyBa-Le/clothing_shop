@@ -1,7 +1,18 @@
 import { useNavigation } from "@react-navigation/native";
 import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
+import { logout } from "../service/AuthService";
 
 const Admin = () => {
+    const navigation = useNavigation();
+
+    const handleLogout = async () => {
+        await logout();
+        navigation.reset({
+            index: 0,
+            routes: [{ name: 'Login' as never }],
+        });
+    }
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>👑 Chào mừng đến với trang quản trị</Text>
@@ -13,7 +24,7 @@ const Admin = () => {
                 <GridItem label="Quản lý người dùng" color="#E24A4A" page="UserManagement" />
             </View>
 
-            <TouchableOpacity style={styles.logoutBtn}>
+            <TouchableOpacity onPress={handleLogout} style={styles.logoutBtn}>
                 <Text style={styles.logoutText}>Đăng xuất</Text>
             </TouchableOpacity>
         </View>

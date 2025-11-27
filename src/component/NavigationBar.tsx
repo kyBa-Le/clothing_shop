@@ -36,8 +36,10 @@ const NavigationBar = () => {
 
     const handleLogout = async () => {
         await logout();
-        setIsLoggedIn(false);
-        setIsMenuOpen(false);
+        navigation.reset({
+            index: 0,
+            routes: [{ name: 'Main' as never }],
+        });
     };
 
     return (
