@@ -1,7 +1,8 @@
-
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Product } from './src/type/ProductType';
 import AppRoute from './src/component/StackRoute';
+import { UserType } from './src/type/UserType';
+import { useEffect, useState } from 'react';
+import { AuthContext } from './src/component/AuthContext';
 
 export type RootStackParamList = {
   Main: undefined;
@@ -14,10 +15,12 @@ export type RootStackParamList = {
 }
 
 function App() {
-  const Stack = createNativeStackNavigator<RootStackParamList>();
-  
+  const [user, setUser] = useState<UserType | null>(null);
+
   return (
-    <AppRoute />
+    <AuthContext.Provider value={{ user, setUser }}>
+      <AppRoute />
+    </AuthContext.Provider>
   );
 }
 

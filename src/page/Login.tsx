@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
     Text,
     TextInput,
@@ -12,11 +12,25 @@ import { useNavigation } from "@react-navigation/native";
 import { login } from "../service/AuthService";
 import type { NavigationProp } from "@react-navigation/native";
 import { RootStackParamList } from "../../App";
+import { AuthContext } from "../component/AuthContext";
 
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const { user, setUser } = useContext(AuthContext);
+
+    useEffect(() => {
+        if (user != null) {
+            if (user.role === 'customer') {
+                console.log("Navigating to Main");
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: "Main" as never }],
+                });
+            }
+        }
+    }, [user]);
 
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
@@ -28,9 +42,10 @@ const Login = () => {
         setLoading(true);
         try {
             const success = await login(username.trim(), password);
-            if (success) {
-                navigation.navigate("Main");
-            } else {
+            if (success != null) {
+                setUser(success);
+            }
+            else {
                 Alert.alert("Lỗi đăng nhập", "Tên đăng nhập hoặc mật khẩu không đúng.");
             }
         } catch (error) {

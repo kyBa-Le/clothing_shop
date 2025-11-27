@@ -1,32 +1,31 @@
-import { useEffect, useState } from "react";
-import { Image, Text, View, StyleSheet, Alert } from "react-native";
-import { isUserLoggedIn } from "../service/AuthService";
-import { UserType } from "../type/UserType";
+import { useContext, useEffect } from "react";
+import { Image, Text, View, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from "../component/AuthContext";
 
 const Profile = () => {
-    const [user, setUser] = useState<UserType | null>(null);
+    const { user } = useContext(AuthContext);
     const navigation = useNavigation();
 
     useEffect(() => {
         const getLoggedInUser = async () => {
-            const result = await isUserLoggedIn();
-            if (result) {
-                setUser(result);
-            } else {
-                Alert.alert("Bạn chưa đăng nhập", "Vui lòng đăng nhập để xem trang cá nhân.");
-                navigation.navigate("Login" as never);
+            if (user == null) {
+                Alert.alert("Vui lòng đăng nhập để xem trang cá nhân.");
+                navigation.reset({
+                    index: 0,
+                    routes: [{ name: "Login" as never }],
+                });
             }
         };
         getLoggedInUser();
-    }, []);
+    }, [user, navigation]);
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Profile</Text>
-
+        <>
             {user ? (
-                <View>
+                <View style={styles.container}>
+                    <Text style={styles.title}>Profile</Text>
+
                     <Image
                         style={styles.avatar}
                         source={{
@@ -49,10 +48,15 @@ const Profile = () => {
                     </View>
                 </View>
             ) : (
-                <Text>Vui lòng đăng nhập để xem trang cá nhân.</Text>
+                <View style={styles.container}>
+                    <TouchableOpacity style={{ padding: 10 }} onPress={() => navigation.navigate("Login" as never)}>
+                        <Text style={{ fontSize: 18, color: "#007BFF" }}>Vui lòng đăng nhập để xem trang cá nhân</Text>
+                    </TouchableOpacity>
+                </View>
             )}
-        </View>
+        </>
     );
+
 };
 
 export default Profile;
