@@ -37,8 +37,8 @@ const BottomTab = () => {
                 headerShown: false,
             })}
         >
-            <Tab.Screen name="User" component={Home} />
             <Tab.Screen name="Admin" component={Admin} />
+            <Tab.Screen name="User" component={Home} />
             <Tab.Screen name="Login" component={Login} />
             <Tab.Screen name="SignUp" component={SignUp} />
         </Tab.Navigator>

@@ -1,8 +1,10 @@
-import { useNavigation } from "@react-navigation/native";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import { logout } from "../service/AuthService";
 import { AuthContext } from "../component/AuthContext";
 import { useContext, useEffect } from "react";
+import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
+import { RootStackParamList } from "../../App";
 
 const Admin = () => {
     const navigation = useNavigation();
@@ -27,13 +29,13 @@ const Admin = () => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>👑 Chào mừng đến với trang quản trị</Text>
+            <Text style={styles.title}>Chào mừng đến với trang quản trị</Text>
 
             <View style={styles.gridContainer}>
-                <GridItem label="Quản lý sản phẩm" color="#4A90E2" page="ProductManagement" />
-                <GridItem label="Quản lý danh mục" color="#50C878" page="CategoryManagement" />
-                <GridItem label="Quản lý đơn hàng" color="#FFB020" page="OrderManagement" />
-                <GridItem label="Quản lý người dùng" color="#E24A4A" page="UserManagement" />
+                <GridItem label="Quản lý sản phẩm" color="#4A90E2" page="ProductManagement" icon="box" />
+                <GridItem label="Quản lý danh mục" color="#50C878" page="CategoryManagement" icon="tags" />
+                <GridItem label="Quản lý đơn hàng" color="#FFB020" page="OrderManagement" icon="basket-shopping" />
+                <GridItem label="Quản lý người dùng" color="#E24A4A" page="UserManagement" icon="users" />
             </View>
 
             <TouchableOpacity onPress={handleLogout} style={styles.logoutBtn}>
@@ -47,12 +49,14 @@ type GridItemProps = {
     label: string;
     color: string;
     page: string;
+    icon: string;
 };
 
-const GridItem = ({ label, color, page }: GridItemProps) => {
-    const navigation = useNavigation();
+const GridItem = ({ label, color, page, icon }: GridItemProps) => {
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     return (
         <TouchableOpacity onPress={() => {navigation.navigate(page as never)}} style={[styles.gridItem, { backgroundColor: color }]}>
+            <FontAwesome6Icon name={icon} size={32} color="#fff" />
             <Text style={styles.gridText}>{label}</Text>
         </TouchableOpacity>
     );
