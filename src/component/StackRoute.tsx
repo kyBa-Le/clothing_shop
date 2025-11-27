@@ -37,16 +37,16 @@ const AdminRoute = () => {
         if (user != null && user.role == 'admin') {
             navigation.reset({
                 index: 0,
-                routes: [{ name: "Admin" as never }],
+                routes: [{ name: "AdminTab" as never }],
             });
         }
     }, [user]);
 
     return (
-        <Stack.Navigator initialRouteName={user != null ? "Admin" : "Login"}>
+        <Stack.Navigator initialRouteName={user != null ? "AdminTab" : "Login"}>
             <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
             <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-            <Stack.Screen name="Admin" component={AdminBottomTab} options={{ headerShown: false }} />
+            <Stack.Screen name="AdminTab" component={AdminBottomTab} options={{ headerShown: false }} />
             <Stack.Screen name="ProductManagement" component={ProductManagement} options={{ headerShown: false }} />
         </Stack.Navigator>
     )

@@ -9,11 +9,6 @@ import { CARD_MARGIN, CARD_WIDTH, numberOfColumns } from "../constant/CardConsta
 import { LIST_COLUMN_WRAPPER_STYLE, LIST_CONTENT_CONTAINER_STYLE } from "../constant/ListCardConstant";
 import Slider from '@react-native-community/slider';
 
-// Enable LayoutAnimation for Android
-if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
-    UIManager.setLayoutAnimationEnabledExperimental(true);
-}
-
 type SearchScreenProp = RouteProp<RootStackParamList, 'Search'>;
 
 const Search = ({ route }: { route: SearchScreenProp }) => {
@@ -24,7 +19,7 @@ const Search = ({ route }: { route: SearchScreenProp }) => {
     const [fromPrice, setFromPrice] = useState<number>(0);
     const [toPrice, setToPrice] = useState<number>(0);
     const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-    const [filterVisible, setFilterVisible] = useState<boolean>(true); // toggle state
+    const [filterVisible, setFilterVisible] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -61,7 +56,7 @@ const Search = ({ route }: { route: SearchScreenProp }) => {
     };
 
     const toggleFilter = () => {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut); // smooth animation
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         setFilterVisible(prev => !prev);
     };
 

@@ -13,7 +13,7 @@ export type RootStackParamList = {
   Login: undefined;
   Search: { searchQuery: string };
   Detail: { item: Product };
-  Admin: undefined;
+  AdminTab: undefined;
   ProductManagement: undefined;
 }
 

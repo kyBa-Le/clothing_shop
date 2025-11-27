@@ -1,4 +1,4 @@
-import { Text, TextInput, Touchable, TouchableOpacity, View } from "react-native"
+import { TextInput, TouchableOpacity, View } from "react-native"
 import NavigationBar from "../component/NavigationBar"
 import React, { useState } from "react";
 import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";

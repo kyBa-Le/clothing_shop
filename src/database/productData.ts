@@ -71,7 +71,7 @@ const productsData: any = [
 
 export const createProductTable = async (db: SQLiteDatabase) => {
     const query = await db.executeSql(
-        'CREATE TABLE IF NOT EXISTS products (id INTEGER AUTO INCREMENT PRIMARY KEY, name TEXT NOT NULL, price DOUBLE NOT NULL, image TEXT NOT NULL, category_id INTEGER, FOREIGN KEY(category_id) REFERENCES categories(id));',
+        'CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY, name TEXT NOT NULL, price DOUBLE NOT NULL, image TEXT NOT NULL, category_id INTEGER, FOREIGN KEY(category_id) REFERENCES categories(id));',
     );
     console.log("Create table: ", query);
 }
