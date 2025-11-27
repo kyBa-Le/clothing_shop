@@ -29,15 +29,17 @@ const NavigationBar = () => {
 
     const toggleMenu = () => setIsMenuOpen(prev => !prev);
 
-    const navigateAndClose = (screen: Exclude<keyof RootStackParamList, 'Search'| 'Detail'>) => {
+    const navigateAndClose = (screen: Exclude<keyof RootStackParamList, 'Search' | 'Detail'>) => {
         navigation.navigate(screen);
         setIsMenuOpen(false);
     };
 
     const handleLogout = async () => {
         await logout();
-        setIsLoggedIn(false);
-        setIsMenuOpen(false);
+        navigation.reset({
+            index: 0,
+            routes: [{ name: 'Main' as never }],
+        });
     };
 
     return (
@@ -51,6 +53,9 @@ const NavigationBar = () => {
                 </TouchableOpacity>
             ) : (
                 <View style={styles.menu}>
+                    <MenuItem onPress={() => navigation.navigate('Main')}>
+                        Trang chủ
+                    </MenuItem>
                     {isLoggedIn ? (
                         <MenuItem onPress={handleLogout}>Đăng xuất</MenuItem>
                     ) : (
