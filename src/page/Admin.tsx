@@ -1,17 +1,29 @@
 import { useNavigation } from "@react-navigation/native";
 import { Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import { logout } from "../service/AuthService";
+import { AuthContext } from "../component/AuthContext";
+import { useContext, useEffect } from "react";
 
 const Admin = () => {
     const navigation = useNavigation();
+    const { user, setUser } = useContext(AuthContext);
 
     const handleLogout = async () => {
-        await logout();
+        await logout({ setUser });
         navigation.reset({
             index: 0,
             routes: [{ name: 'Login' as never }],
         });
     }
+
+    useEffect(() => {
+        if (!user || user.role !== 'admin') {
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'Main' as never }],
+            });
+        }
+    }, [user, navigation]);
 
     return (
         <View style={styles.container}>

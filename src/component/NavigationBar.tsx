@@ -1,31 +1,24 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
     StyleSheet,
     Text,
     TouchableOpacity,
     View,
 } from 'react-native';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
 import { RootStackParamList } from '../../App';
-import { isUserLoggedIn, logout } from '../service/AuthService';
+import { logout } from '../service/AuthService';
 import type { NavigationProp } from '@react-navigation/native';
+import { AuthContext } from './AuthContext';
 
 const NavigationBar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { user, setUser } = useContext(AuthContext);
+    console.log("NavigationBar user:", user);
 
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
-    useFocusEffect(() => {
-        const checkLoginStatus = async () => {
-            const loggedIn = await isUserLoggedIn();
-            console.log('User logged in status:', loggedIn);
-            setIsLoggedIn(loggedIn ? true : false);
-        };
-        checkLoginStatus();
-    });
 
     const toggleMenu = () => setIsMenuOpen(prev => !prev);
 
@@ -35,10 +28,11 @@ const NavigationBar = () => {
     };
 
     const handleLogout = async () => {
-        await logout();
+        await logout({ setUser });
+        toggleMenu();
         navigation.reset({
             index: 0,
-            routes: [{ name: 'Main' as never }],
+            routes: [{ name: 'Login' as never }],
         });
     };
 
@@ -56,7 +50,7 @@ const NavigationBar = () => {
                     <MenuItem onPress={() => navigation.navigate('Main')}>
                         Trang chủ
                     </MenuItem>
-                    {isLoggedIn ? (
+                    {user != null ? (
                         <MenuItem onPress={handleLogout}>Đăng xuất</MenuItem>
                     ) : (
                         <MenuItem onPress={() => navigateAndClose('Login')}>

@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
-import { UserType } from "../type/UserType";
-import { NavigationContainer } from "@react-navigation/native";
+import { useContext, useEffect } from "react";
+import { NavigationContainer, NavigationProp, useNavigation } from "@react-navigation/native";
 import UserLayout from "../layout/UserLayout";
 import { RootStackParamList } from "../../App";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -9,15 +8,15 @@ import SignUp from "../page/SignUp";
 import BottomTab from "./BottomTab";
 import Search from "../page/Search";
 import ProductDetails from "../page/ProductDetails";
-import Admin from "../page/Admin";
-import { Screen } from "react-native-screens";
-import { isUserLoggedIn } from "../service/AuthService";
+import { AuthContext } from "./AuthContext";
+import AdminBottomTab from "./AdminBottomTab";
 
 const UserRoute = () => {
     const Stack = createNativeStackNavigator<RootStackParamList>();
+    const { user } = useContext(AuthContext);
     return (
         <UserLayout>
-            <Stack.Navigator initialRouteName='Main'>
+            <Stack.Navigator initialRouteName={user != null ? "Main" : "Login"}>
                 <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
                 <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
                 <Stack.Screen name="Main" component={BottomTab} options={{ headerShown: false }} />
@@ -30,29 +29,34 @@ const UserRoute = () => {
 
 const AdminRoute = () => {
     const Stack = createNativeStackNavigator<RootStackParamList>();
+    const { user } = useContext(AuthContext);
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+    
+    useEffect(() => {
+        if (user != null && user.role == 'admin') {
+            navigation.reset({
+                index: 0,
+                routes: [{ name: "Admin" as never }],
+            });
+        }
+    }, [user]);
+
     return (
-        <Stack.Navigator initialRouteName='Admin'>
-            <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+        <Stack.Navigator initialRouteName={user != null ? "Admin" : "Login"}>
             <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
-            <Stack.Screen name="Admin" component={Admin} options={{ headerShown: false }} />
+            <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+            <Stack.Screen name="Admin" component={AdminBottomTab} options={{ headerShown: false }} />
         </Stack.Navigator>
     )
 }
 
 const AppRoute = () => {
-    const [user, setUser] = useState<UserType | null>(null);
-    
-        useEffect(() => {
-            const getLoggedInUser = async () => {
-                const result = await isUserLoggedIn();
-                setUser(result);
-            };
-            getLoggedInUser();
-        }, []);
+    const {user} = useContext(AuthContext);
+
     return (
         <NavigationContainer>
             {
-                user && user.role === 'admin' ? <AdminRoute /> : <UserRoute />
+                user != null && user.role === 'admin' ? <AdminRoute /> : <UserRoute />
             }
         </NavigationContainer>
     )
