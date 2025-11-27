@@ -14,6 +14,7 @@ export type RootStackParamList = {
   Search: { searchQuery: string };
   Detail: { item: Product };
   Admin: undefined;
+  ProductManagement: undefined;
 }
 
 function App() {
