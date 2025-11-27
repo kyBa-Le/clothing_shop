@@ -8,8 +8,8 @@ import SignUp from "../page/SignUp";
 import BottomTab from "./BottomTab";
 import Search from "../page/Search";
 import ProductDetails from "../page/ProductDetails";
-import Admin from "../page/Admin";
 import { AuthContext } from "./AuthContext";
+import AdminBottomTab from "./AdminBottomTab";
 
 const UserRoute = () => {
     const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -45,7 +45,7 @@ const AdminRoute = () => {
         <Stack.Navigator initialRouteName={user != null ? "Admin" : "Login"}>
             <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
             <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-            <Stack.Screen name="Admin" component={Admin} options={{ headerShown: false }} />
+            <Stack.Screen name="Admin" component={AdminBottomTab} options={{ headerShown: false }} />
         </Stack.Navigator>
     )
 }
