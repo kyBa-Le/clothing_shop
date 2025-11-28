@@ -18,3 +18,16 @@ export const getCategories = async () => {
         return [];
     }
 };
+
+export const updateCategory = async (category: CategoryType) => {
+    try {
+        const db = await getDbConnection();
+        const { id, name } = category;
+        await db.executeSql(
+            `UPDATE categories SET name = ? WHERE id = ?`, [name, id]
+        );
+        console.log("Updated category: ", category);
+    } catch (error) {
+        console.error("Failed to update category: ", error);
+    }
+};

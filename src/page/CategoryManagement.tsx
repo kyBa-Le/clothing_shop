@@ -9,23 +9,64 @@ import {
 import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
 import { useCallback, useEffect, useState } from "react";
 import { CategoryType } from "../type/CategoryType";
-import { getCategories } from "../service/CategoryService";
+import { getCategories, updateCategory } from "../service/CategoryService";
 
-const CategoryItem = ({ id, name }: CategoryType) => {
+const CategoryItem = ({ id, name, onCategoryUpdated }: CategoryType & { onCategoryUpdated: () => void }) => {
+    const [editedName, setEditedName] = useState(name);
+    const [isUpdating, setIsUpdating] = useState(false);
+
+    const handleUpdate = async () => {
+        const updatedCategory: CategoryType = { id, name: editedName };
+        await updateCategory(updatedCategory);
+        onCategoryUpdated();
+    };
+
     return (
         <View style={styles.card}>
             <Text style={styles.label}>ID Danh mục:</Text>
             <Text style={styles.value}>{id}</Text>
 
             <Text style={styles.label}>Tên danh mục:</Text>
-            <TextInput value={name} editable={false} style={styles.input} />
+            <TextInput
+                value={editedName}
+                onChangeText={setEditedName}
+                editable={isUpdating}
+                style={styles.input}
+            />
 
-            <TouchableOpacity style={styles.editBtn}>
-                <FontAwesome6Icon name="pencil" size={20} color="#50E3C2" />
-            </TouchableOpacity>
+            {!isUpdating && (
+                <TouchableOpacity style={styles.editBtn} onPress={() => setIsUpdating(true)}>
+                    <FontAwesome6Icon name="pencil" size={20} color="#50E3C2" />
+                </TouchableOpacity>
+            )}
+
+            {isUpdating && (
+                <View style={styles.btnRow}>
+                    <TouchableOpacity
+                        style={[styles.btn, styles.confirmBtn]}
+                        onPress={async () => {
+                            await handleUpdate();
+                            setIsUpdating(false);
+                        }}
+                    >
+                        <FontAwesome6Icon name="check" size={18} color="#fff" />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={[styles.btn, styles.cancelBtn]}
+                        onPress={() => {
+                            setEditedName(name);
+                            setIsUpdating(false);
+                        }}
+                    >
+                        <FontAwesome6Icon name="xmark" size={18} color="#fff" />
+                    </TouchableOpacity>
+                </View>
+            )}
         </View>
     );
 };
+
 
 const CategroyManagement = () => {
     const [categories, setCategories] = useState<CategoryType[]>([]);
@@ -52,7 +93,7 @@ const CategroyManagement = () => {
                 )}
                 data={categories}
                 keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => <CategoryItem {...item} />}
+                renderItem={({ item }) => <CategoryItem {...item} onCategoryUpdated={fetchCategories} />}
                 contentContainerStyle={{ paddingBottom: 30 }}
             />
         </View>
@@ -125,5 +166,27 @@ const styles = StyleSheet.create({
         top: 14,
         right: 14,
         padding: 6,
+    },
+    btnRow: {
+        flexDirection: "row",
+        justifyContent: "flex-end",
+        marginTop: 10,
+        gap: 10,
+    },
+
+    btn: {
+        paddingVertical: 8,
+        paddingHorizontal: 14,
+        borderRadius: 8,
+        flexDirection: "row",
+        alignItems: "center",
+    },
+
+    confirmBtn: {
+        backgroundColor: "#50C878", // green
+    },
+
+    cancelBtn: {
+        backgroundColor: "#FF3B30", // red
     },
 });
