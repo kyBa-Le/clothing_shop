@@ -43,3 +43,16 @@ export const deleteCategory = async (categoryId: number) => {
         console.error("Failed to delete category: ", error);
     }
 };
+
+export const addCategory = async (category: CategoryType) => {
+    try {
+        const db = await getDbConnection();
+        const { id, name } = category;
+        await db.executeSql(
+            `INSERT INTO categories (id, name) VALUES (?, ?)`, [id, name]
+        );
+        console.log("Added category: ", category);
+    } catch (error) {
+        console.error("Failed to add category: ", error);
+    }
+};

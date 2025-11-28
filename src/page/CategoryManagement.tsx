@@ -6,11 +6,13 @@ import {
     View,
     StyleSheet,
     Alert,
+    Modal
 } from "react-native";
 import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
 import { useCallback, useEffect, useState } from "react";
 import { CategoryType } from "../type/CategoryType";
-import { getCategories, updateCategory, deleteCategory } from "../service/CategoryService";
+import { getCategories, updateCategory, deleteCategory, addCategory } from "../service/CategoryService";
+
 
 const CategoryItem = ({ id, name, onCategoryUpdated }: CategoryType & { onCategoryUpdated: () => void }) => {
     const [editedName, setEditedName] = useState(name);
@@ -24,17 +26,15 @@ const CategoryItem = ({ id, name, onCategoryUpdated }: CategoryType & { onCatego
 
     const handleDelete = async () => {
         Alert.alert("Xác nhận", "Bạn có chắc chắn muốn xóa danh mục này?", [
-            {
-                text: "Hủy", style: "cancel"
-            },
+            { text: "Hủy", style: "cancel" },
             {
                 text: "Xóa",
                 onPress: async () => {
                     await deleteCategory(id);
                     onCategoryUpdated();
                 },
-                style: "destructive"
-            }
+                style: "destructive",
+            },
         ]);
     };
 
@@ -56,6 +56,7 @@ const CategoryItem = ({ id, name, onCategoryUpdated }: CategoryType & { onCatego
                     <FontAwesome6Icon name="pencil" size={20} color="#50E3C2" />
                 </TouchableOpacity>
             )}
+
             <TouchableOpacity style={styles.deleteBtn} onPress={handleDelete}>
                 <FontAwesome6Icon name="trash" size={20} color="#FF3B30" />
             </TouchableOpacity>
@@ -88,8 +89,83 @@ const CategoryItem = ({ id, name, onCategoryUpdated }: CategoryType & { onCatego
 };
 
 
-const CategroyManagement = () => {
+const AddCategoryModal = ({
+    visible,
+    onClose,
+    onAdded,
+}: {
+    visible: boolean;
+    onClose: () => void;
+    onAdded: () => void;
+}) => {
+    const [id, setId] = useState("");
+    const [name, setName] = useState("");
+
+    const handleConfirm = async () => {
+        const newCategory: CategoryType = {
+            id: Number(id),
+            name,
+        };
+
+        await addCategory(newCategory);
+
+        onAdded();
+        onClose();
+        setId("");
+        setName("");
+    };
+
+    return (
+        <Modal visible={visible} transparent animationType="fade">
+            <View style={styles.modalOverlay}>
+                <View style={styles.modalBox}>
+                    <Text style={styles.modalTitle}>Thêm danh mục mới</Text>
+
+                    <Text style={styles.label}>ID:</Text>
+                    <TextInput
+                        value={id}
+                        onChangeText={setId}
+                        keyboardType="numeric"
+                        style={styles.input}
+                        placeholder="Nhập ID"
+                        placeholderTextColor={"#8aa0c0"}
+                    />
+
+                    <Text style={styles.label}>Tên danh mục:</Text>
+                    <TextInput
+                        value={name}
+                        onChangeText={setName}
+                        style={styles.input}
+                        placeholder="Nhập tên danh mục"
+                        placeholderTextColor={"#8aa0c0"}
+                    />
+
+                    <View style={styles.btnRow}>
+                        <TouchableOpacity
+                            style={[styles.btn, styles.confirmBtn]}
+                            onPress={handleConfirm}
+                        >
+                            <FontAwesome6Icon name="check" size={18} color="#fff" />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={[styles.btn, styles.cancelBtn]}
+                            onPress={onClose}
+                        >
+                            <FontAwesome6Icon name="xmark" size={18} color="#fff" />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </View>
+        </Modal>
+    );
+};
+
+
+
+const CategoryManagement = () => {
     const [categories, setCategories] = useState<CategoryType[]>([]);
+    const [showAddModal, setShowAddModal] = useState(false);
 
     const fetchCategories = useCallback(async () => {
         const fetchedCategories = await getCategories();
@@ -102,6 +178,12 @@ const CategroyManagement = () => {
 
     return (
         <View style={styles.container}>
+            <AddCategoryModal
+                visible={showAddModal}
+                onClose={() => setShowAddModal(false)}
+                onAdded={fetchCategories}
+            />
+
             <FlatList
                 ListHeaderComponent={() => (
                     <View style={styles.header}>
@@ -109,18 +191,32 @@ const CategroyManagement = () => {
                             <FontAwesome6Icon name="tag" size={30} color="#fff" />
                         </View>
                         <Text style={styles.headerTitle}>Quản lý danh mục</Text>
+
+                        {/* Add Button */}
+                        <TouchableOpacity
+                            style={styles.addBtn}
+                            onPress={() => setShowAddModal(true)}
+                        >
+                            <FontAwesome6Icon name="plus" size={24} color="#50C878" />
+                            <Text style={{ marginLeft: 8, color: "#50C878", fontWeight: "600" }}>
+                                Thêm danh mục mới
+                            </Text>
+                        </TouchableOpacity>
                     </View>
                 )}
                 data={categories}
                 keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => <CategoryItem {...item} onCategoryUpdated={fetchCategories} />}
+                renderItem={({ item }) => (
+                    <CategoryItem {...item} onCategoryUpdated={fetchCategories} />
+                )}
                 contentContainerStyle={{ paddingBottom: 30 }}
             />
         </View>
     );
 };
 
-export default CategroyManagement;
+export default CategoryManagement;
+
 
 const styles = StyleSheet.create({
     container: {
@@ -147,6 +243,13 @@ const styles = StyleSheet.create({
         marginTop: 12,
         color: "#2A3749",
     },
+    addBtn: {
+        flexDirection: "row",
+        alignItems: "center",
+        marginTop: 12,
+    },
+
+    /* Card Styles */
     card: {
         backgroundColor: "#ffffff",
         padding: 18,
@@ -181,6 +284,8 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: "#2A3749",
     },
+
+    /* Buttons */
     editBtn: {
         position: "absolute",
         top: 14,
@@ -199,7 +304,6 @@ const styles = StyleSheet.create({
         marginTop: 10,
         gap: 10,
     },
-
     btn: {
         paddingVertical: 8,
         paddingHorizontal: 14,
@@ -207,12 +311,32 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
     },
-
     confirmBtn: {
-        backgroundColor: "#50C878", // green
+        backgroundColor: "#50C878",
+    },
+    cancelBtn: {
+        backgroundColor: "#FF3B30",
     },
 
-    cancelBtn: {
-        backgroundColor: "#FF3B30", // red
+    /* Modal Styles */
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: "rgba(0,0,0,0.5)",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    modalBox: {
+        width: "85%",
+        backgroundColor: "#fff",
+        padding: 20,
+        borderRadius: 16,
+        elevation: 5,
+    },
+    modalTitle: {
+        fontSize: 20,
+        fontWeight: "700",
+        color: "#2A3749",
+        textAlign: "center",
+        marginBottom: 16,
     },
 });
