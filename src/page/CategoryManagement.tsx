@@ -5,11 +5,12 @@ import {
     TouchableOpacity,
     View,
     StyleSheet,
+    Alert,
 } from "react-native";
 import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
 import { useCallback, useEffect, useState } from "react";
 import { CategoryType } from "../type/CategoryType";
-import { getCategories, updateCategory } from "../service/CategoryService";
+import { getCategories, updateCategory, deleteCategory } from "../service/CategoryService";
 
 const CategoryItem = ({ id, name, onCategoryUpdated }: CategoryType & { onCategoryUpdated: () => void }) => {
     const [editedName, setEditedName] = useState(name);
@@ -19,6 +20,22 @@ const CategoryItem = ({ id, name, onCategoryUpdated }: CategoryType & { onCatego
         const updatedCategory: CategoryType = { id, name: editedName };
         await updateCategory(updatedCategory);
         onCategoryUpdated();
+    };
+
+    const handleDelete = async () => {
+        Alert.alert("Xác nhận", "Bạn có chắc chắn muốn xóa danh mục này?", [
+            {
+                text: "Hủy", style: "cancel"
+            },
+            {
+                text: "Xóa",
+                onPress: async () => {
+                    await deleteCategory(id);
+                    onCategoryUpdated();
+                },
+                style: "destructive"
+            }
+        ]);
     };
 
     return (
@@ -39,6 +56,9 @@ const CategoryItem = ({ id, name, onCategoryUpdated }: CategoryType & { onCatego
                     <FontAwesome6Icon name="pencil" size={20} color="#50E3C2" />
                 </TouchableOpacity>
             )}
+            <TouchableOpacity style={styles.deleteBtn} onPress={handleDelete}>
+                <FontAwesome6Icon name="trash" size={20} color="#FF3B30" />
+            </TouchableOpacity>
 
             {isUpdating && (
                 <View style={styles.btnRow}>
@@ -137,7 +157,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.07,
         shadowRadius: 6,
         borderLeftWidth: 6,
-        borderLeftColor: "#50C878", // colorful left accent stripe
+        borderLeftColor: "#50C878",
     },
     label: {
         fontSize: 13,
@@ -165,6 +185,12 @@ const styles = StyleSheet.create({
         position: "absolute",
         top: 14,
         right: 14,
+        padding: 6,
+    },
+    deleteBtn: {
+        position: "absolute",
+        top: 14,
+        right: 50,
         padding: 6,
     },
     btnRow: {

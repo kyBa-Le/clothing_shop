@@ -31,3 +31,15 @@ export const updateCategory = async (category: CategoryType) => {
         console.error("Failed to update category: ", error);
     }
 };
+
+export const deleteCategory = async (categoryId: number) => {
+    try {
+        const db = await getDbConnection();
+        await db.executeSql(
+            `DELETE FROM categories WHERE id = ?`, [categoryId]
+        );
+        console.log("Deleted category with id: ", categoryId);
+    } catch (error) {
+        console.error("Failed to delete category: ", error);
+    }
+};
