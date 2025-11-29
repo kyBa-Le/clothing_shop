@@ -40,10 +40,10 @@ export const searchProductsByName = async (searchQuery: string) => {
 
 export const addProduct = async (product: Product) => {
     const db = await getDbConnection();
-    const { name, price, category_id } = product;
+    const { name, price, category_id, image } = product;
     await db.executeSql(
-        `INSERT INTO products (name, price, category_id) VALUES (?, ?, ?)`,
-        [name, price, category_id]
+        `INSERT INTO products (name, price, category_id, image) VALUES (?, ?, ?, ?)`,
+        [name, price, category_id, image]
     );
 };
 

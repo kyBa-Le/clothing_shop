@@ -6,15 +6,21 @@ import {
     View,
     StyleSheet,
     Alert,
-    Modal
+    Modal,
 } from "react-native";
 import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
 import { useCallback, useEffect, useState } from "react";
 import { CategoryType } from "../type/CategoryType";
 import { getCategories, updateCategory, deleteCategory, addCategory } from "../service/CategoryService";
+import { addProduct } from "../service/ProductService";
+import { Product } from "../type/ProductType";
 
-
-const CategoryItem = ({ id, name, onCategoryUpdated }: CategoryType & { onCategoryUpdated: () => void }) => {
+const CategoryItem = ({
+    id,
+    name,
+    onCategoryUpdated,
+    onAddProduct,
+}: CategoryType & { onCategoryUpdated: () => void; onAddProduct: (category: CategoryType) => void }) => {
     const [editedName, setEditedName] = useState(name);
     const [isUpdating, setIsUpdating] = useState(false);
 
@@ -40,16 +46,18 @@ const CategoryItem = ({ id, name, onCategoryUpdated }: CategoryType & { onCatego
 
     return (
         <View style={styles.card}>
-            <Text style={styles.label}>ID Danh mục:</Text>
-            <Text style={styles.value}>{id}</Text>
+            <TouchableOpacity onPress={() => onAddProduct({ id, name })}>
+                <Text style={styles.label}>ID Danh mục:</Text>
+                <Text style={styles.value}>{id}</Text>
 
-            <Text style={styles.label}>Tên danh mục:</Text>
-            <TextInput
-                value={editedName}
-                onChangeText={setEditedName}
-                editable={isUpdating}
-                style={styles.input}
-            />
+                <Text style={styles.label}>Tên danh mục:</Text>
+                <TextInput
+                    value={editedName}
+                    onChangeText={setEditedName}
+                    editable={isUpdating}
+                    style={styles.input}
+                />
+            </TouchableOpacity>
 
             {!isUpdating && (
                 <TouchableOpacity style={styles.editBtn} onPress={() => setIsUpdating(true)}>
@@ -88,7 +96,7 @@ const CategoryItem = ({ id, name, onCategoryUpdated }: CategoryType & { onCatego
     );
 };
 
-
+/* ------------------ ADD CATEGORY MODAL ------------------ */
 const AddCategoryModal = ({
     visible,
     onClose,
@@ -108,7 +116,6 @@ const AddCategoryModal = ({
         };
 
         await addCategory(newCategory);
-
         onAdded();
         onClose();
         setId("");
@@ -161,11 +168,100 @@ const AddCategoryModal = ({
     );
 };
 
+/* ------------------ ADD PRODUCT MODAL ------------------ */
+const AddProductModal = ({
+    visible,
+    onClose,
+    category,
+}: {
+    visible: boolean;
+    onClose: () => void;
+    category: CategoryType | null;
+}) => {
+    const [name, setName] = useState("");
+    const [price, setPrice] = useState("");
+    const [image, setImage] = useState("");
+
+    const handleAdd = async () => {
+        if (!category) return;
+
+        await addProduct({
+            id: 0, // SQLite auto increment
+            name,
+            price: Number(price),
+            image,
+            category_id: category.id,
+        });
+
+        Alert.alert("Thành công", "Tạo sản phẩm thành công!");
+        onClose();
+        setName("");
+        setPrice("");
+        setImage("");
+    };
+
+    return (
+        <Modal visible={visible} transparent animationType="fade">
+            <View style={styles.modalOverlay}>
+                <View style={styles.modalBox}>
+                    <Text style={styles.modalTitle}>Thêm sản phẩm cho {category?.name}</Text>
+
+                    <Text style={styles.label}>Tên sản phẩm:</Text>
+                    <TextInput
+                        value={name}
+                        onChangeText={setName}
+                        style={styles.input}
+                        placeholder="Nhập tên sản phẩm"
+                        placeholderTextColor="#8aa0c0"
+                    />
+
+                    <Text style={styles.label}>Giá:</Text>
+                    <TextInput
+                        value={price}
+                        onChangeText={setPrice}
+                        style={styles.input}
+                        placeholder="Nhập giá"
+                        placeholderTextColor="#8aa0c0"
+                        keyboardType="numeric"
+                    />
+
+                    <Text style={styles.label}>Link ảnh:</Text>
+                    <TextInput
+                        value={image}
+                        onChangeText={setImage}
+                        style={styles.input}
+                        placeholder="Nhập URL ảnh"
+                        placeholderTextColor="#8aa0c0"
+                    />
+
+                    <View style={styles.btnRow}>
+                        <TouchableOpacity
+                            style={[styles.btn, styles.confirmBtn]}
+                            onPress={handleAdd}
+                        >
+                            <FontAwesome6Icon name="check" size={18} color="#fff" />
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={[styles.btn, styles.cancelBtn]}
+                            onPress={onClose}
+                        >
+                            <FontAwesome6Icon name="xmark" size={18} color="#fff" />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </View>
+        </Modal>
+    );
+};
 
 
+/* ------------------ MAIN PAGE ------------------ */
 const CategoryManagement = () => {
     const [categories, setCategories] = useState<CategoryType[]>([]);
     const [showAddModal, setShowAddModal] = useState(false);
+    const [showAddProductModal, setShowAddProductModal] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState<CategoryType | null>(null);
 
     const fetchCategories = useCallback(async () => {
         const fetchedCategories = await getCategories();
@@ -176,12 +272,23 @@ const CategoryManagement = () => {
         fetchCategories();
     }, [fetchCategories]);
 
+    const handleAddProduct = (category: CategoryType) => {
+        setSelectedCategory(category);
+        setShowAddProductModal(true);
+    };
+
     return (
         <View style={styles.container}>
             <AddCategoryModal
                 visible={showAddModal}
                 onClose={() => setShowAddModal(false)}
                 onAdded={fetchCategories}
+            />
+
+            <AddProductModal
+                visible={showAddProductModal}
+                onClose={() => setShowAddProductModal(false)}
+                category={selectedCategory}
             />
 
             <FlatList
@@ -192,7 +299,6 @@ const CategoryManagement = () => {
                         </View>
                         <Text style={styles.headerTitle}>Quản lý danh mục</Text>
 
-                        {/* Add Button */}
                         <TouchableOpacity
                             style={styles.addBtn}
                             onPress={() => setShowAddModal(true)}
@@ -207,7 +313,11 @@ const CategoryManagement = () => {
                 data={categories}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
-                    <CategoryItem {...item} onCategoryUpdated={fetchCategories} />
+                    <CategoryItem
+                        {...item}
+                        onCategoryUpdated={fetchCategories}
+                        onAddProduct={handleAddProduct}
+                    />
                 )}
                 contentContainerStyle={{ paddingBottom: 30 }}
             />
@@ -217,7 +327,7 @@ const CategoryManagement = () => {
 
 export default CategoryManagement;
 
-
+/* ------------------ STYLES ------------------ */
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -248,8 +358,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginTop: 12,
     },
-
-    /* Card Styles */
     card: {
         backgroundColor: "#ffffff",
         padding: 18,
@@ -284,8 +392,6 @@ const styles = StyleSheet.create({
         fontSize: 15,
         color: "#2A3749",
     },
-
-    /* Buttons */
     editBtn: {
         position: "absolute",
         top: 14,
@@ -317,8 +423,6 @@ const styles = StyleSheet.create({
     cancelBtn: {
         backgroundColor: "#FF3B30",
     },
-
-    /* Modal Styles */
     modalOverlay: {
         flex: 1,
         backgroundColor: "rgba(0,0,0,0.5)",
