@@ -1,4 +1,4 @@
-import { Product } from './src/type/ProductType';
+import { Product, ProductColor, ProductSize } from './src/type/ProductType';
 import AppRoute from './src/component/StackRoute';
 import { UserType } from './src/type/UserType';
 import { useEffect, useState } from 'react';
@@ -18,7 +18,8 @@ export type RootStackParamList = {
   ProductManagement: undefined;
   CategoryManagement: undefined;
   UserManagement: undefined;
-  OrderManagement: undefined
+  OrderManagement: undefined;
+  Checkout: { product_id: number, color: ProductColor, size: ProductSize }
 }
 
 function App() {

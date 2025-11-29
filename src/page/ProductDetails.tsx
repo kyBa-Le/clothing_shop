@@ -1,13 +1,18 @@
 import { Image, Text, TouchableOpacity, View, StyleSheet, ScrollView } from "react-native";
 import { RootStackParamList } from "../../App";
-import { RouteProp, useRoute } from "@react-navigation/native";
+import { NavigationProp, RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
+import { useState } from "react";
+import { ProductColor, ProductSize } from "../type/ProductType";
 
 type ProductDetailRouteProp = RouteProp<RootStackParamList, "Detail">;
 
 const ProductDetails = () => {
     const route = useRoute<ProductDetailRouteProp>();
     const product = route.params.item;
+    const [pickedColor, setPickedColor] = useState<ProductColor>(ProductColor.BLACK)
+    const [pickedSize, setPickedSize] = useState<ProductSize>(ProductSize.L)
+    const navigation = useNavigation<NavigationProp<RootStackParamList>>()
 
     return (
         <View style={styles.container}>
@@ -45,23 +50,61 @@ const ProductDetails = () => {
                     <View style={styles.optionsContainer}>
                         <View style={styles.optionRow}>
                             <Text style={styles.optionLabel}>Color:</Text>
+
                             <View style={styles.colorOptions}>
-                                <View style={[styles.colorCircle, { backgroundColor: "#000" }]} />
-                                <View style={[styles.colorCircle, { backgroundColor: "#E5E5E5", borderWidth: 1 }]} />
-                                <View style={[styles.colorCircle, { backgroundColor: "#8B4513" }]} />
+                                <TouchableOpacity onPress={() => setPickedColor(ProductColor.BLACK)}>
+                                    <View style={[
+                                        styles.colorCircle,
+                                        { backgroundColor: "#000" },
+                                        pickedColor === ProductColor.BLACK && styles.colorCircleSelected
+                                    ]} />
+                                </TouchableOpacity>
+
+                                <TouchableOpacity onPress={() => setPickedColor(ProductColor.GRAY)}>
+                                    <View style={[
+                                        styles.colorCircle,
+                                        { backgroundColor: "#E5E5E5", borderWidth: 1 },
+                                        pickedColor === ProductColor.GRAY && styles.colorCircleSelected
+                                    ]} />
+                                </TouchableOpacity>
+
+                                <TouchableOpacity onPress={() => setPickedColor(ProductColor.BROWN)}>
+                                    <View style={[
+                                        styles.colorCircle,
+                                        { backgroundColor: "#8B4513" },
+                                        pickedColor === ProductColor.BROWN && styles.colorCircleSelected
+                                    ]} />
+                                </TouchableOpacity>
                             </View>
                         </View>
 
+
                         <View style={styles.optionRow}>
                             <Text style={styles.optionLabel}>Size:</Text>
+
                             <View style={styles.sizeOptions}>
-                                {["S", "M", "L", "XL"].map(size => (
-                                    <TouchableOpacity key={size} style={styles.sizeBox}>
-                                        <Text style={styles.sizeText}>{size}</Text>
+                                {Object.values(ProductSize).map((size) => (
+                                    <TouchableOpacity
+                                        key={size}
+                                        onPress={() => setPickedSize(size)}
+                                        style={[
+                                            styles.sizeBox,
+                                            pickedSize === size && styles.sizeBoxSelected
+                                        ]}
+                                    >
+                                        <Text
+                                            style={[
+                                                styles.sizeText,
+                                                pickedSize === size && styles.sizeTextSelected
+                                            ]}
+                                        >
+                                            {size}
+                                        </Text>
                                     </TouchableOpacity>
                                 ))}
                             </View>
                         </View>
+
                     </View>
 
                     {/* Reviews Placeholder */}
@@ -80,7 +123,13 @@ const ProductDetails = () => {
                     </TouchableOpacity>
 
                     {/* Buy Now Button */}
-                    <TouchableOpacity style={styles.buyNowButton}>
+                    <TouchableOpacity onPress={() => {
+                        navigation.navigate("Checkout", {
+                            product_id: product.id,
+                            color: pickedColor,
+                            size: pickedSize
+                        });}} 
+                        style={styles.buyNowButton}>
                         <Text style={styles.buyNowText}>Buy Now</Text>
                     </TouchableOpacity>
                 </View>
@@ -216,6 +265,20 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold",
     },
+    sizeBoxSelected: {
+        backgroundColor: "#333",
+        borderColor: "#333",
+    },
+
+    sizeTextSelected: {
+        color: "#fff",
+    },
+
+    colorCircleSelected: {
+        borderWidth: 3,
+        borderColor: "#333"
+    },
+
 });
 
 export default ProductDetails;

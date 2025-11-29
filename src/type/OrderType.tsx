@@ -11,5 +11,6 @@ export type OrderType = {
     date: string,
     quantity: number,
     total: number,
-    address: string
+    address: string,
+    phone: string
 }

@@ -40,13 +40,14 @@ export const addOrder = async (order: Omit<OrderType, "id">) => {
         quantity,
         total,
         address,
+        phone
     } = order;
 
     await db.executeSql(
         `INSERT INTO orders 
-        (name, product_id, user_id, size, color, status, date, quantity, total, address) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [name, product_id, user_id, size, color, status, date, quantity, total, address]
+        (name, product_id, user_id, size, color, status, date, quantity, total, address, phone) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [name, product_id, user_id, size, color, status, date, quantity, total, address, phone]
     );
 };
 
@@ -65,6 +66,7 @@ export const updateOrder = async (order: OrderType) => {
         quantity,
         total,
         address,
+        phone
     } = order;
 
     await db.executeSql(
@@ -78,7 +80,8 @@ export const updateOrder = async (order: OrderType) => {
             date = ?, 
             quantity = ?, 
             total = ?, 
-            address = ?
+            address = ?,
+            phone = ?
         WHERE id = ?`,
         [
             name,
@@ -92,6 +95,7 @@ export const updateOrder = async (order: OrderType) => {
             total,
             address,
             id,
+            phone
         ]
     );
 };

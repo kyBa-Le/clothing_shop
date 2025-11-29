@@ -14,6 +14,7 @@ import ProductManagement from "../page/ProductManagement";
 import CategoryManagement from "../page/CategoryManagement";
 import UserManagement from "../page/UserManagement";
 import OrderManagement from "../page/OrderManagement";
+import Checkout from "../page/Checkout";
 
 const UserRoute = () => {
     const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -26,6 +27,7 @@ const UserRoute = () => {
                 <Stack.Screen name="Main" component={BottomTab} options={{ headerShown: false }} />
                 <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} />
                 <Stack.Screen name="Detail" component={ProductDetails} options={{ headerShown: false }} />
+                <Stack.Screen name="Checkout" component={Checkout} options={{ headerShown: false }} />
             </Stack.Navigator>
         </UserLayout>
     )

@@ -65,3 +65,18 @@ export const deleteProduct = async (productId: number) => {
         [productId]
     );
 };
+
+export const getProductById = async (id: number) => {
+    const db = await getDbConnection();
+    const results = await db.executeSql(
+        `SELECT * FROM products WHERE id = ?`,
+        [id]
+    )
+    const products: Product[] = [];
+    results.forEach(result => {
+        for (let i = 0; i < result.rows.length; i++) {
+            products.push(result.rows.item(i));
+        }
+    })
+    return products[0];
+}

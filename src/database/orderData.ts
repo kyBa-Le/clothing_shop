@@ -13,7 +13,8 @@ const sampleOrders: Omit<OrderType, 'id'>[] = [
         date: "15/04/2025",
         quantity: 3,
         total: 3,
-        address: "string"
+        address: "string",
+        phone: "0869110503"
     },
 ]
 
@@ -30,7 +31,8 @@ export const createOrderTable = async (db: SQLiteDatabase) => {
             date TEXT NOT NULL,
             quantity INTEGER NOT NULL,
             total REAL NOT NULL,
-            address TEXT NOT NULL
+            address TEXT NOT NULL,
+            phone TEXT NOT NULL
         )
     `);
 };
@@ -48,8 +50,8 @@ export const insertSampleOrders = async (db: SQLiteDatabase) => {
         for (const element of sampleOrders) {
             await db.executeSql(
                 `INSERT INTO orders 
-                (name, product_id, user_id, size, color, status, date, quantity, total, address)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                (name, product_id, user_id, size, color, status, date, quantity, total, address, phone)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
                 [
                     element.name,
                     element.product_id,
@@ -60,7 +62,8 @@ export const insertSampleOrders = async (db: SQLiteDatabase) => {
                     element.date,
                     element.quantity,
                     element.total,
-                    element.address
+                    element.address,
+                    element.phone
                 ]
             );
         }
