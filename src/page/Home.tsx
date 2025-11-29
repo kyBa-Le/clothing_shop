@@ -8,26 +8,21 @@ import {
 import ProductCard from "../component/ProductCard";
 import Banner from "../component/Banner";
 import { Product } from "../type/ProductType";
-import { createTables, getDbConnection, insertSampleDb } from "../database/dbService";
-import { getProducts } from "../service/ProductService";
 import { CARD_MARGIN, CARD_WIDTH, numberOfColumns } from "../constant/CardConstant";
 import { LIST_COLUMN_WRAPPER_STYLE, LIST_CONTENT_CONTAINER_STYLE } from "../constant/ListCardConstant";
+import { getProducts } from "../service/ProductService";
 
 
 const Home = () => {
     const [products, setProducts] = useState<Product[]>([]);
-    
-    useEffect(() => {
-    const initDb = async () => {
-        const db = await getDbConnection();
-        await createTables(db);
-        await insertSampleDb(db);
-        const products = await getProducts();
-        setProducts(products);
-    }
-    initDb();
-    }, []);
 
+    useEffect( () => {
+        const fetchProduct = async () => {
+            const products = await getProducts();
+            setProducts(products)
+        }
+        fetchProduct();
+    }, [])
     return (
         <View style={{ flex: 1 }}>
             <Banner />

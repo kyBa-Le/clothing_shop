@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { AuthContext } from './src/component/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LOGGED_IN_USER_KEY } from './src/service/AuthService';
+import { createTables, getDbConnection, insertSampleDb } from './src/database/dbService';
 
 export type RootStackParamList = {
   Main: undefined;
@@ -17,10 +18,20 @@ export type RootStackParamList = {
   ProductManagement: undefined;
   CategoryManagement: undefined;
   UserManagement: undefined;
+  OrderManagement: undefined
 }
 
 function App() {
   const [user, setUser] = useState<UserType | null>(null);
+
+  useEffect(() => {
+    const initDb = async () => {
+      const db = await getDbConnection();
+      await createTables(db);
+      await insertSampleDb(db);
+    }
+    initDb();
+  }, []);
   
   useEffect(() => {
     const loadUser = async () => {

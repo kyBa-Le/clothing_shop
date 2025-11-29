@@ -13,6 +13,7 @@ import AdminBottomTab from "./AdminBottomTab";
 import ProductManagement from "../page/ProductManagement";
 import CategoryManagement from "../page/CategoryManagement";
 import UserManagement from "../page/UserManagement";
+import OrderManagement from "../page/OrderManagement";
 
 const UserRoute = () => {
     const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -52,6 +53,7 @@ const AdminRoute = () => {
             <Stack.Screen name="ProductManagement" component={ProductManagement} options={{ headerShown: false }} />
             <Stack.Screen name="CategoryManagement" component={CategoryManagement} options={{ headerShown: false }} />
             <Stack.Screen name="UserManagement" component={UserManagement} options={{ headerShown: false }} />
+            <Stack.Screen name="OrderManagement" component={OrderManagement} options={{ headerShown: false }} />
         </Stack.Navigator>
     )
 }

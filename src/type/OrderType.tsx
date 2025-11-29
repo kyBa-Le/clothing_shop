@@ -7,7 +7,7 @@ export type OrderType = {
     user_id: number,
     size: ProductSize,
     color: ProductColor,
-    status: string,
+    status: "ordered" | "pending" | "received",
     date: string,
     quantity: number,
     total: number,
