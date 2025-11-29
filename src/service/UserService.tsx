@@ -51,11 +51,29 @@ export const deleteUserById = async (id: number) => {
     return result;
 }
 
-export const updateUser = async ({id, username, password, role}: {id: number, username: string, password: string, role: 'admin' | 'customer'}) => {
+export const updateUser = async (user: {
+    id: number;
+    username: string;
+    password?: string;
+    role?: 'admin' | 'customer';
+    email: string;
+    phone: string;
+}) => {
     const db = await getDbConnection();
-    const result = await db.executeSql('UPDATE users SET username = ?, password = ?, role = ? WHERE id = ?;', [username, password, role, id]);
-    return result;
-}
+    const { id, username, password, role, email, phone } = user;
+
+    if (password) {
+        return await db.executeSql(
+            'UPDATE users SET username = ?, password = ?, email = ?, phone = ? WHERE id = ?;',
+            [username, password, email, phone, id]
+        );
+    } else {
+        return await db.executeSql(
+            'UPDATE users SET username = ?, email = ?, phone = ? WHERE id = ?;',
+            [username, email, phone, id]
+        );
+    }
+};
 
 export const secureAdminUseCase = async ({username}: {username: string}) => {
     if (username === 'admin') {

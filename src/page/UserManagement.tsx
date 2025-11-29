@@ -7,7 +7,7 @@ import { deleteUserById, getAllUsers, secureAdminUseCase, updateUser } from "../
 
 const PRIMARY = "#E24A4A";
 
-const UserItem = ({ id, username, role, onUserChange }: UserType & { onUserChange: () => void }) => {
+const UserItem = ({ id, username, role, email, phone, onUserChange }: UserType & { onUserChange: () => void }) => {
     const [selectedValue, setSelectedValue] = useState(role);
     const [isUpdating, setIsUpdating] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -21,7 +21,7 @@ const UserItem = ({ id, username, role, onUserChange }: UserType & { onUserChang
                 setIsUpdating(false);
                 return;
             }
-            await updateUser({ id, username, password: '', role: selectedValue as 'admin' | 'customer' });
+            await updateUser({ id, username, password: '', role: selectedValue as 'admin' | 'customer', email, phone });
             onUserChange();
         } catch (err) {
             console.error("Update error:", err);
