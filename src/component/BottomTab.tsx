@@ -3,6 +3,7 @@ import Home from '../page/Home';
 import Category from '../page/Category';
 import FontAwesome6Icon from 'react-native-vector-icons/FontAwesome6';
 import Profile from '../page/Profile';
+import OrderHistory from '../page/OrderHistory';
 
 const Tab = createBottomTabNavigator();
 
@@ -19,6 +20,9 @@ const BottomTab = () => {
                             break;
                         case 'Category':
                             iconName = 'list';
+                            break;
+                        case "OrderHistory":
+                            iconName = 'clock-rotate-left';
                             break;
                         case 'Profile':
                             iconName = 'user';
@@ -37,6 +41,7 @@ const BottomTab = () => {
             <Tab.Screen name="Home" component={Home} />
             <Tab.Screen name="Category" component={Category} />
             <Tab.Screen name='Profile' component={Profile} />
+            <Tab.Screen name='OrderHistory' component={OrderHistory} />
         </Tab.Navigator>
     );
 }

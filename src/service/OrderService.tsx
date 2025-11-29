@@ -99,3 +99,17 @@ export const updateOrder = async (order: OrderType) => {
         ]
     );
 };
+
+export const getOrdersByUserId = async (user_id: number): Promise<OrderType[]> => {
+    const db = await getDbConnection();
+    const results = await db.executeSql("SELECT * FROM orders WHERE user_id = ?", [user_id]);
+    const orders: OrderType[] = [];
+
+    results.forEach(result => {
+        for (let i = 0; i < result.rows.length; i++) {
+            orders.push(result.rows.item(i));
+        }
+    });
+
+    return orders;
+};

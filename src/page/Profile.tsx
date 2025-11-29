@@ -75,12 +75,8 @@ const Profile = () => {
     return (
         <>
             {user ? (
-                <KeyboardAvoidingView
-                    style={{ flex: 1 }}
-                    behavior={Platform.OS === "ios" ? "padding" : "height"}
-                    keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
+                <View style={styles.container}
                 >
-                    <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
                         <Text style={styles.title}>Profile</Text>
 
                         <Image
@@ -175,8 +171,7 @@ const Profile = () => {
                                 </ScrollView>
                             </KeyboardAvoidingView>
                         </Modal>
-                    </ScrollView>
-                </KeyboardAvoidingView>
+                </View>
             ) : (
                 <View style={styles.container}>
                     <TouchableOpacity
@@ -198,13 +193,12 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: "center",
-        paddingTop: 40,
+        justifyContent: "center",
         backgroundColor: "#f9f9f9",
     },
     title: {
         fontSize: 26,
         fontWeight: "bold",
-        marginBottom: 20,
     },
     avatar: {
         width: 70,
