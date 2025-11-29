@@ -1,14 +1,28 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Text, TextInput, TouchableOpacity, View, StyleSheet, Alert } from "react-native";
 import { createUser, isUsernameTaken } from "../service/UserService";
 import { useNavigation } from "@react-navigation/native";
 import { login } from "../service/AuthService";
+import { AuthContext } from "../component/AuthContext";
 
 const SignUp = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const navigation = useNavigation();
+    const { user } = useContext(AuthContext);
+
+    useEffect(() => {
+            if (user != null) {
+                if (user.role === 'customer') {
+                    console.log("Navigating to Main");
+                    navigation.reset({
+                        index: 0,
+                        routes: [{ name: "Main" as never }],
+                    });
+                }
+            }
+        }, [user]);
 
     const validateInformation = async () => {
         if (!username || !password || !confirmPassword) {
@@ -32,7 +46,6 @@ const SignUp = () => {
 
         await createUser({username, password, role: 'customer'});
         await login(username, password);
-        navigation.navigate('Main' as never);
     };
 
     return (

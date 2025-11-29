@@ -16,6 +16,7 @@ export type RootStackParamList = {
   AdminTab: undefined;
   ProductManagement: undefined;
   CategoryManagement: undefined;
+  UserManagement: undefined;
 }
 
 function App() {
