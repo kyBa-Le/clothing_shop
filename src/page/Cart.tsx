@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../component/AuthContext";
 import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
@@ -9,6 +9,7 @@ import {
     removeCartItem,
 } from "../service/CartService";
 import { getProductById } from "../service/ProductService";
+import { useNavigation } from "@react-navigation/native";
 
 const PRIMARY = "#f89898ff";
 
@@ -16,6 +17,7 @@ type CartItemWithProduct = CartItemType & { productName: string; price: number }
 
 const Cart = () => {
     const user = useContext(AuthContext)?.user;
+    const navigation = useNavigation<any>();
     const [cartItems, setCartItems] = useState<CartItemWithProduct[]>([]);
 
     const fetchCart = async () => {
@@ -28,7 +30,7 @@ const Cart = () => {
                 return {
                     ...item,
                     productName: product?.name || "Unknown",
-                    price: product?.price || 0
+                    price: product?.price || 0,
                 };
             })
         );
@@ -38,7 +40,7 @@ const Cart = () => {
 
     useEffect(() => {
         fetchCart();
-    }, [user]);
+    }, []);
 
     const handleUpdateQuantity = async (item: CartItemType, delta: number) => {
         const newQuantity = item.quantity + delta;
@@ -52,7 +54,15 @@ const Cart = () => {
         fetchCart();
     };
 
-    const totalPrice = cartItems.reduce((sum, item) => sum + item.quantity * item.price, 0);
+    const handleCheckout = (item: CartItemWithProduct) => {
+        if (!user) {
+            Alert.alert("Thông báo", "Vui lòng đăng nhập để mua hàng");
+            navigation.navigate("Login");
+            return;
+        }
+
+        navigation.navigate("Checkout", { cartItems: [item] }); // single item checkout
+    };
 
     if (!user) {
         return (
@@ -76,17 +86,25 @@ const Cart = () => {
             <FlatList
                 data={cartItems}
                 keyExtractor={(item) => item.id.toString()}
+                contentContainerStyle={{ paddingBottom: 20 }}
                 renderItem={({ item }) => (
                     <View style={styles.card}>
                         <View style={{ flex: 1 }}>
                             <Text style={styles.productName}>{item.productName}</Text>
-                            <Text style={styles.label}>Màu: <Text style={styles.value}>{item.color}</Text></Text>
-                            <Text style={styles.label}>Size: <Text style={styles.value}>{item.size}</Text></Text>
+                            <Text style={styles.label}>
+                                Màu: <Text style={styles.value}>{item.color}</Text>
+                            </Text>
+                            <Text style={styles.label}>
+                                Size: <Text style={styles.value}>{item.size}</Text>
+                            </Text>
                             <Text style={styles.price}>{item.price.toLocaleString()} đ</Text>
                         </View>
 
                         <View style={styles.rightColumn}>
-                            <View style={styles.quantityRow}>
+                            {/* Horizontal action row: quantity + trash */}
+                            <View style={styles.actionRow}>
+                                
+
                                 <TouchableOpacity onPress={() => handleUpdateQuantity(item, -1)}>
                                     <Text style={styles.quantityBtn}>-</Text>
                                 </TouchableOpacity>
@@ -98,69 +116,67 @@ const Cart = () => {
                                 </TouchableOpacity>
                             </View>
 
-                            <TouchableOpacity onPress={() => handleRemoveItem(item)} style={styles.trashBtn}>
-                                <FontAwesome6Icon name="trash" size={22} color="#FF3B30" />
-                            </TouchableOpacity>
+                            {/* Checkout button below */}
+                            <View style={[styles.actionRow, { marginTop: 20 }]}>
+                                <TouchableOpacity onPress={() => handleRemoveItem(item)} style={styles.trashBtn}>
+                                    <FontAwesome6Icon name="trash" size={20} color="#FF3B30" />
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={styles.itemCheckoutBtn}
+                                    onPress={() => handleCheckout(item)}
+                                >
+                                    <Text style={styles.itemCheckoutText}>Thanh toán</Text>
+                                </TouchableOpacity>
+                            </View>
+                            
                         </View>
-
                     </View>
                 )}
-                contentContainerStyle={{ paddingBottom: 80 }}
             />
-
-            {/* STICKY FOOTER */}
-            <View style={styles.footer}>
-                <Text style={styles.totalText}>Tổng cộng: {totalPrice.toLocaleString()} đ</Text>
-
-                <TouchableOpacity style={styles.checkoutBtn}>
-                    <Text style={styles.checkoutText}>Thanh toán</Text>
-                </TouchableOpacity>
-            </View>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: "#FFF7EB", padding: 16 },
+    container: { flex: 1, padding: 12 },
 
     center: { flex: 1, justifyContent: "center", alignItems: "center" },
 
     emptyText: {
         marginTop: 16,
-        fontSize: 17,
+        fontSize: 16,
         color: "#777",
-        fontWeight: "500"
+        fontWeight: "500",
     },
 
     card: {
         backgroundColor: "#fff",
-        padding: 16,
-        borderRadius: 14,
-        marginBottom: 14,
+        paddingVertical: 20,
+        paddingHorizontal: 20,
+        borderRadius: 12,
+        marginBottom: 10,
         flexDirection: "row",
-        alignItems: "center",
+        alignItems: "flex-start",
         justifyContent: "space-between",
-        paddingRight: 12,
-
         shadowColor: "#000",
         shadowOpacity: 0.08,
         shadowRadius: 5,
-        elevation: 3,
+        elevation: 2,
     },
 
     productName: {
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: "700",
-        marginBottom: 6,
+        marginBottom: 2,
         color: "#333",
     },
 
-    label: { fontSize: 14, color: "#555", marginBottom: 2 },
+    label: { fontSize: 12, color: "#555", marginBottom: 1 },
     value: { fontWeight: "600", color: "#333" },
 
     price: {
-        marginTop: 6,
-        fontSize: 15,
+        marginTop: 2,
+        fontSize: 13,
         fontWeight: "700",
         color: PRIMARY,
     },
@@ -168,68 +184,46 @@ const styles = StyleSheet.create({
     rightColumn: {
         flexShrink: 0,
         alignItems: "center",
-        justifyContent: "space-between",
-        height: "100%",
-        marginLeft: 12,
+        marginLeft: 8,
     },
 
-    quantityRow: {
+    actionRow: {
         flexDirection: "row",
         alignItems: "center",
-        gap: 10,
+        gap: 6,
+        marginBottom: 6,
     },
 
     trashBtn: {
-        marginTop: 10,
+        marginRight: 16,
     },
 
     quantityBtn: {
-        fontSize: 20,
-        fontWeight: "800",
-        width: 32,
-        height: 32,
+        fontSize: 16,
+        fontWeight: "700",
+        width: 26,
+        height: 26,
         textAlign: "center",
         textAlignVertical: "center",
         backgroundColor: "#f1f1f1",
-        borderRadius: 8,
+        borderRadius: 6,
     },
 
     quantityText: {
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: "700",
-        width: 28,
+        width: 24,
         textAlign: "center",
     },
 
-    footer: {
-        position: "absolute",
-        bottom: 0,
-        left: 0,
-        right: 0,
-        padding: 16,
-        backgroundColor: "#fff",
-        borderTopWidth: 1,
-        borderTopColor: "#eee",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        elevation: 12,
-    },
-
-    totalText: {
-        fontSize: 18,
-        fontWeight: "700",
-        color: "#333",
-    },
-
-    checkoutBtn: {
+    itemCheckoutBtn: {
         backgroundColor: PRIMARY,
-        paddingVertical: 12,
-        paddingHorizontal: 24,
-        borderRadius: 12,
+        paddingVertical: 6,
+        paddingHorizontal: 12,
+        borderRadius: 10,
     },
 
-    checkoutText: { color: "#fff", fontWeight: "700", fontSize: 16 },
+    itemCheckoutText: { color: "#fff", fontWeight: "700", fontSize: 13 },
 });
 
 export default Cart;
