@@ -23,7 +23,9 @@ export const createUserTable = async (db: SQLiteDatabase) => {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT NOT NULL,
         password TEXT NOT NULL,
-        role TEXT NOT NULL CHECK (role IN ('admin', 'customer'))
+        role TEXT NOT NULL CHECK (role IN ('admin', 'customer')),
+        email TEXT,
+        phone TEXT
     );`;
     await db.executeSql(query);
 }

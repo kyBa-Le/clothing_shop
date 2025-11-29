@@ -10,7 +10,7 @@ const SignUp = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const navigation = useNavigation();
-    const { user } = useContext(AuthContext);
+    const { user, setUser } = useContext(AuthContext);
 
     useEffect(() => {
             if (user != null) {
@@ -45,7 +45,8 @@ const SignUp = () => {
         if (!isValid) return;
 
         await createUser({username, password, role: 'customer'});
-        await login(username, password);
+        const user = await login(username, password);
+        setUser(user);
     };
 
     return (
@@ -151,5 +152,4 @@ const styles = StyleSheet.create({
         color: '#007BFF',
         fontWeight: 'bold',
     }
-
 });

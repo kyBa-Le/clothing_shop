@@ -122,6 +122,11 @@ const OrderDetailModal = ({
                     </View>
 
                     <View style={styles.row}>
+                        <Text style={styles.label}>Số điện thoại:</Text>
+                        <Text style={styles.value}>{order.phone}</Text>
+                    </View>
+
+                    <View style={styles.row}>
                         <Text style={styles.label}>Số lượng:</Text>
                         <Text style={styles.value}>{order.quantity}</Text>
                     </View>
@@ -141,7 +146,7 @@ const OrderDetailModal = ({
                         <Text style={styles.value}>{order.date}</Text>
                     </View>
 
-                    <View >
+                    <View>
                         <Text style={styles.label}>Trạng thái:</Text>
                         <View style={styles.pickerWrapper}>
                             <Picker selectedValue={status} onValueChange={(v) => setStatus(v)}>
@@ -191,11 +196,7 @@ const OrderManagement = () => {
                 ListHeaderComponent={() => (
                     <View style={styles.header}>
                         <View style={styles.iconCircle}>
-                            <FontAwesome6Icon
-                                name="basket-shopping"
-                                size={30}
-                                color="#fff"
-                            />
+                            <FontAwesome6Icon name="basket-shopping" size={30} color="#fff" />
                         </View>
                         <Text style={styles.headerTitle}>Quản lý đơn hàng</Text>
                     </View>

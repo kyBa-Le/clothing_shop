@@ -6,6 +6,7 @@ import { AuthContext } from './src/component/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LOGGED_IN_USER_KEY } from './src/service/AuthService';
 import { createTables, getDbConnection, insertSampleDb } from './src/database/dbService';
+import { CartItemType } from './src/type/CartItemType';
 
 export type RootStackParamList = {
   Main: undefined;
@@ -18,7 +19,8 @@ export type RootStackParamList = {
   ProductManagement: undefined;
   CategoryManagement: undefined;
   UserManagement: undefined;
-  OrderManagement: undefined
+  OrderManagement: undefined;
+  Checkout: { cartItems?: CartItemType[] };
 }
 
 function App() {

@@ -37,16 +37,18 @@ const Category = () => {
     }, [selectedCategory]);
 
     return (
-        <View style={{ flex: 1, alignItems: 'center' }}>
-            <View style={styles.categoryList}>
-                {categories.map(category => {
-                    const isSelected = selectedCategory?.id === category.id;
-                    return (
-                        <TouchableOpacity key={category.id} onPress={() => setSelectedCategory(category)}>
-                            <Text style={[styles.categoryItem, { backgroundColor: isSelected ? "#ffe4e4ff" : "white" }]} >{category.name}</Text>
-                        </TouchableOpacity>
-                    )
-                })}
+        <View style={{ flex: 1 }}>
+            <View style={{alignItems: "center"}}>
+                <View style={styles.categoryList}>
+                    {categories.map(category => {
+                        const isSelected = selectedCategory?.id === category.id;
+                        return (
+                            <TouchableOpacity key={category.id} onPress={() => setSelectedCategory(category)}>
+                                <Text style={[styles.categoryItem, { backgroundColor: isSelected ? "#ffe4e4ff" : "white" }]} >{category.name}</Text>
+                            </TouchableOpacity>
+                        )
+                    })}
+                </View>
             </View>
             <FlatList
                 data={products}

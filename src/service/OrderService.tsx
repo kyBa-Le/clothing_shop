@@ -40,13 +40,14 @@ export const addOrder = async (order: Omit<OrderType, "id">) => {
         quantity,
         total,
         address,
+        phone
     } = order;
 
     await db.executeSql(
         `INSERT INTO orders 
-        (name, product_id, user_id, size, color, status, date, quantity, total, address) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-        [name, product_id, user_id, size, color, status, date, quantity, total, address]
+        (name, product_id, user_id, size, color, status, date, quantity, total, address, phone) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [name, product_id, user_id, size, color, status, date, quantity, total, address, phone]
     );
 };
 
@@ -65,6 +66,7 @@ export const updateOrder = async (order: OrderType) => {
         quantity,
         total,
         address,
+        phone
     } = order;
 
     await db.executeSql(
@@ -78,7 +80,8 @@ export const updateOrder = async (order: OrderType) => {
             date = ?, 
             quantity = ?, 
             total = ?, 
-            address = ?
+            address = ?,
+            phone = ?
         WHERE id = ?`,
         [
             name,
@@ -91,7 +94,22 @@ export const updateOrder = async (order: OrderType) => {
             quantity,
             total,
             address,
-            id,
+            phone,
+            id 
         ]
     );
+};
+
+export const getOrdersByUserId = async (user_id: number): Promise<OrderType[]> => {
+    const db = await getDbConnection();
+    const results = await db.executeSql("SELECT * FROM orders WHERE user_id = ?", [user_id]);
+    const orders: OrderType[] = [];
+
+    results.forEach(result => {
+        for (let i = 0; i < result.rows.length; i++) {
+            orders.push(result.rows.item(i));
+        }
+    });
+
+    return orders;
 };
