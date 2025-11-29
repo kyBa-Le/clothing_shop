@@ -16,26 +16,33 @@ import { getOrders, updateOrder } from "../service/OrderService";
 
 const PRIMARY = "#FFB020";
 
-/* ----------------------------- ORDER ITEM ----------------------------- */
 const OrderItem = ({ order, onUpdated }: { order: OrderType; onUpdated: () => void }) => {
     const [showModal, setShowModal] = useState(false);
 
     return (
         <>
             <TouchableOpacity style={styles.card} onPress={() => setShowModal(true)}>
-                <Text style={styles.label}>Mã đơn hàng:</Text>
-                <Text style={styles.value}>{order.id}</Text>
+                <View style={styles.row}>
+                    <Text style={styles.label}>Mã đơn hàng:</Text>
+                    <Text style={styles.value}>{order.id}</Text>
+                </View>
 
-                <Text style={styles.label}>Tên đơn hàng:</Text>
-                <Text style={styles.value}>{order.name}</Text>
+                <View style={styles.row}>
+                    <Text style={styles.label}>Tên đơn hàng:</Text>
+                    <Text style={styles.value}>{order.name}</Text>
+                </View>
 
-                <Text style={styles.label}>Trạng thái:</Text>
-                <Text style={[styles.status, styles[`status_${order.status}`]]}>
-                    {order.status}
-                </Text>
+                <View style={styles.row}>
+                    <Text style={styles.label}>Trạng thái:</Text>
+                    <Text style={[styles.status, styles[`status_${order.status}`]]}>
+                        {order.status}
+                    </Text>
+                </View>
 
-                <Text style={styles.label}>Tổng tiền:</Text>
-                <Text style={styles.value}>{order.total} đ</Text>
+                <View style={styles.row}>
+                    <Text style={styles.label}>Tổng tiền:</Text>
+                    <Text style={styles.value}>{order.total} đ</Text>
+                </View>
             </TouchableOpacity>
 
             <OrderDetailModal
@@ -48,7 +55,6 @@ const OrderItem = ({ order, onUpdated }: { order: OrderType; onUpdated: () => vo
     );
 };
 
-/* ----------------------------- ORDER DETAIL MODAL ----------------------------- */
 const OrderDetailModal = ({
     visible,
     onClose,
@@ -83,49 +89,69 @@ const OrderDetailModal = ({
                 <View style={styles.modalBox}>
                     <Text style={styles.modalTitle}>Thông tin chi tiết đơn hàng</Text>
 
-                    {/* Order Fields */}
-                    <Text style={styles.label}>Mã đơn hàng:</Text>
-                    <Text style={styles.value}>{order.id}</Text>
-
-                    <Text style={styles.label}>Tên đơn hàng:</Text>
-                    <Text style={styles.value}>{order.name}</Text>
-
-                    <Text style={styles.label}>Khách hàng:</Text>
-                    <Text style={styles.value}>
-                        {customer ? customer.username : "Không có thông tin"}
-                    </Text>
-
-                    <Text style={styles.label}>Sản phẩm ID:</Text>
-                    <Text style={styles.value}>{order.product_id}</Text>
-
-                    <Text style={styles.label}>Size:</Text>
-                    <Text style={styles.value}>{order.size}</Text>
-
-                    <Text style={styles.label}>Màu sắc:</Text>
-                    <Text style={styles.value}>{order.color}</Text>
-
-                    <Text style={styles.label}>Số lượng:</Text>
-                    <Text style={styles.value}>{order.quantity}</Text>
-
-                    <Text style={styles.label}>Tổng tiền:</Text>
-                    <Text style={styles.value}>{order.total} đ</Text>
-
-                    <Text style={styles.label}>Địa chỉ giao hàng:</Text>
-                    <Text style={styles.value}>{order.address}</Text>
-
-                    <Text style={styles.label}>Ngày đặt:</Text>
-                    <Text style={styles.value}>{order.date}</Text>
-
-                    <Text style={styles.label}>Trạng thái:</Text>
-                    <View style={styles.pickerWrapper}>
-                        <Picker selectedValue={status} onValueChange={(v) => setStatus(v)}>
-                            <Picker.Item label="Pending" value="pending" />
-                            <Picker.Item label="Ordered" value="ordered" />
-                            <Picker.Item label="Received" value="received" />
-                        </Picker>
+                    <View style={styles.row}>
+                        <Text style={styles.label}>Mã đơn hàng:</Text>
+                        <Text style={styles.value}>{order.id}</Text>
                     </View>
 
-                    {/* Action buttons */}
+                    <View style={styles.row}>
+                        <Text style={styles.label}>Tên đơn hàng:</Text>
+                        <Text style={styles.value}>{order.name}</Text>
+                    </View>
+
+                    <View style={styles.row}>
+                        <Text style={styles.label}>Khách hàng:</Text>
+                        <Text style={styles.value}>
+                            {customer ? customer.username : "Không có thông tin"}
+                        </Text>
+                    </View>
+
+                    <View style={styles.row}>
+                        <Text style={styles.label}>Sản phẩm ID:</Text>
+                        <Text style={styles.value}>{order.product_id}</Text>
+                    </View>
+
+                    <View style={styles.row}>
+                        <Text style={styles.label}>Size:</Text>
+                        <Text style={styles.value}>{order.size}</Text>
+                    </View>
+
+                    <View style={styles.row}>
+                        <Text style={styles.label}>Màu sắc:</Text>
+                        <Text style={styles.value}>{order.color}</Text>
+                    </View>
+
+                    <View style={styles.row}>
+                        <Text style={styles.label}>Số lượng:</Text>
+                        <Text style={styles.value}>{order.quantity}</Text>
+                    </View>
+
+                    <View style={styles.row}>
+                        <Text style={styles.label}>Tổng tiền:</Text>
+                        <Text style={styles.value}>{order.total} đ</Text>
+                    </View>
+
+                    <View style={styles.row}>
+                        <Text style={styles.label}>Địa chỉ:</Text>
+                        <Text style={styles.value}>{order.address}</Text>
+                    </View>
+
+                    <View style={styles.row}>
+                        <Text style={styles.label}>Ngày đặt:</Text>
+                        <Text style={styles.value}>{order.date}</Text>
+                    </View>
+
+                    <View >
+                        <Text style={styles.label}>Trạng thái:</Text>
+                        <View style={styles.pickerWrapper}>
+                            <Picker selectedValue={status} onValueChange={(v) => setStatus(v)}>
+                                <Picker.Item label="Pending" value="pending" />
+                                <Picker.Item label="Ordered" value="ordered" />
+                                <Picker.Item label="Received" value="received" />
+                            </Picker>
+                        </View>
+                    </View>
+
                     <View style={styles.btnRow}>
                         <TouchableOpacity
                             style={[styles.btn, styles.confirmBtn]}
@@ -147,7 +173,6 @@ const OrderDetailModal = ({
     );
 };
 
-/* ----------------------------- MAIN PAGE ----------------------------- */
 const OrderManagement = () => {
     const [orders, setOrders] = useState<OrderType[]>([]);
 
@@ -188,8 +213,6 @@ const OrderManagement = () => {
 
 export default OrderManagement;
 
-/* ----------------------------- STYLES ----------------------------- */
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -215,8 +238,6 @@ const styles = StyleSheet.create({
         marginTop: 12,
         color: "#3A2F1F",
     },
-
-    /* Card */
     card: {
         backgroundColor: "#ffffff",
         padding: 18,
@@ -226,19 +247,24 @@ const styles = StyleSheet.create({
         borderLeftWidth: 6,
         borderLeftColor: PRIMARY,
     },
+    row: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: 6,
+    },
     label: {
         fontSize: 13,
         fontWeight: "600",
         color: "#5A4A42",
-        marginTop: 4,
+        width: 120,
     },
     value: {
         fontSize: 16,
         color: "#2A2A2A",
-        marginBottom: 6,
+        flex: 1,
+        textAlign: "right",
     },
-
-    /* Status Badge Colors */
     status: {
         paddingVertical: 4,
         paddingHorizontal: 10,
@@ -252,8 +278,6 @@ const styles = StyleSheet.create({
     status_pending: { backgroundColor: "#9E9E9E" },
     status_ordered: { backgroundColor: "#1976D2" },
     status_received: { backgroundColor: "#43A047" },
-
-    /* Modal */
     modalOverlay: {
         flex: 1,
         backgroundColor: "rgba(0,0,0,0.4)",
@@ -281,8 +305,6 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         backgroundColor: "#FFF3DA",
     },
-
-    /* Buttons */
     btnRow: {
         flexDirection: "row",
         justifyContent: "flex-end",
