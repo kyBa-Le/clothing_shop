@@ -94,8 +94,8 @@ export const updateOrder = async (order: OrderType) => {
             quantity,
             total,
             address,
-            id,
-            phone
+            phone,
+            id 
         ]
     );
 };
