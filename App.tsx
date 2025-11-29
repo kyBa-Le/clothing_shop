@@ -1,4 +1,4 @@
-import { Product, ProductColor, ProductSize } from './src/type/ProductType';
+import { Product } from './src/type/ProductType';
 import AppRoute from './src/component/StackRoute';
 import { UserType } from './src/type/UserType';
 import { useEffect, useState } from 'react';
@@ -6,6 +6,7 @@ import { AuthContext } from './src/component/AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LOGGED_IN_USER_KEY } from './src/service/AuthService';
 import { createTables, getDbConnection, insertSampleDb } from './src/database/dbService';
+import { CartItemType } from './src/type/CartItemType';
 
 export type RootStackParamList = {
   Main: undefined;
@@ -19,7 +20,7 @@ export type RootStackParamList = {
   CategoryManagement: undefined;
   UserManagement: undefined;
   OrderManagement: undefined;
-  Checkout: { product_id: number, color: ProductColor, size: ProductSize }
+  Checkout: { cartItems?: CartItemType[] };
 }
 
 function App() {

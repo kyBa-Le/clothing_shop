@@ -3,6 +3,7 @@ import {createProductTable, insertSampleProducts} from './productData';
 import { createCategoryTable, insertSampleCategories } from './categoryData';
 import { createUserTable, insertSampleUsers } from './userData';
 import { createOrderTable, insertSampleOrders } from './orderData';
+import { createCartTable, insertSampleCart } from './cartData';
 
 SQLite.enablePromise(true);
 
@@ -15,6 +16,7 @@ export const createTables = async (db: SQLiteDatabase) => {
   await createProductTable(db);
   await createUserTable(db);
   await createOrderTable(db);
+  await createCartTable(db);
 };
 
 export const insertSampleDb = async (db: SQLiteDatabase) => {
@@ -22,5 +24,6 @@ export const insertSampleDb = async (db: SQLiteDatabase) => {
   await insertSampleProducts(db);
   await insertSampleUsers(db);
   await insertSampleOrders(db);
+  await insertSampleCart(db);
 };
 
