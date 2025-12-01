@@ -18,7 +18,7 @@ const ProductCard = ({ item, cardMargin, cardWidth }: ProductCardProps) => {
                 <Text style={styles.name} numberOfLines={1}>
                     {item.name}
                 </Text>
-                <Text style={styles.price}>${item.price}</Text>
+                <Text style={styles.price}>{item.price.toLocaleString("vi-VN", {style: "currency", currency: "VND"})}</Text>
             </View>
         </TouchableOpacity>
     )
@@ -50,7 +50,7 @@ const styles = StyleSheet.create(
         },
         price: {
             fontSize: 14,
-            color: "#007BFF",
+            color: "#f89898ff",
             fontWeight: "600",
             marginTop: 4,
         },

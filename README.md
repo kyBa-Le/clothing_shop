@@ -1,8 +1,8 @@
-# Clothing Ecommerce App (React Native)
+# Clothing Ecommerce App
 
-This is a new **Ecommerce** mobile application built with **React Native**, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+This is my **Ecommerce** mobile application project built with **React Native**, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
-The app is designed to provide a modern shopping experience, featuring product listings, a cart system, user authentication, and more — optimized for both **iOS** and **Android**.
+The app is designed to provide a modern shopping experience, featuring product listings, a cart system, user authentication and admin management.
 
 ---
 
@@ -41,13 +41,14 @@ npx react-native run-ios
 ecommerce-app/
 │
 ├── src/
-│   ├── assets/           # Images, icons, fonts, etc.
-│   ├── components/       # Reusable UI components
-│   ├── navigation/       # React Navigation setup
+│   ├── asset/            # Images, icons, fonts, etc.
+│   ├── component/        # Reusable UI components
+│   ├── constant/         # The application constants
+│   ├── database/         # Tables initialization and mock data
+│   ├── layout/           # Layout of screens
 │   ├── page/             # App screens (Home, Cart, Product, etc.)
+│   ├── service/          # Data services
 │   ├── type/             # Entity types definition
-│   ├── services/         # Data services
-│   ├── utils/            # Helper functions and constants
 │   └── App.tsx           # Entry point of the app
 │
 ├── android/              # Native Android project
@@ -55,3 +56,11 @@ ecommerce-app/
 ├── package.json
 └── README.md
 ```
+
+## Other information
+### User authentication:
+```You can register an account and login directly to the application to see the customer side's features```
+### Admin authentication:
+```The default admin account is pre-created in this application```
+- username: ```admin```
+- password: ```admin```

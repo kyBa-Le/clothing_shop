@@ -47,7 +47,7 @@ const NavigationBar = () => {
                 </TouchableOpacity>
             ) : (
                 <View style={styles.menu}>
-                    <MenuItem onPress={() => navigation.navigate('Main')}>
+                    <MenuItem onPress={() => {navigation.navigate('Main'); toggleMenu();}}>
                         Trang chủ
                     </MenuItem>
                     {user != null ? (
