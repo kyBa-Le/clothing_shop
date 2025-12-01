@@ -82,7 +82,7 @@ const ProductDetails = () => {
                     <Text style={styles.productName}>{product.name}</Text>
 
                     {/* Price */}
-                    <Text style={styles.price}>{product.price} ₫</Text>
+                    <Text style={styles.price}>{product.price.toLocaleString("vi-VN", {currency: "VND", style: "currency"})}</Text>
 
                     {/* Description */}
                     <Text style={styles.sectionTitle}>Mô tả</Text>
