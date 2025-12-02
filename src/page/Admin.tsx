@@ -29,6 +29,7 @@ const Admin = () => {
 
     return (
         <View style={styles.container}>
+            <Text style={styles.title}>Quản trị viên:  <Text style={{ fontWeight: 'bold' }}>{user?.username}</Text></Text>
             <Text style={styles.title}>Chào mừng đến với trang quản trị</Text>
 
             <View style={styles.gridContainer}>

@@ -20,7 +20,7 @@ export type RootStackParamList = {
   CategoryManagement: undefined;
   UserManagement: undefined;
   OrderManagement: undefined;
-  Checkout: { cartItems?: CartItemType[] };
+  Checkout: { cartItems: CartItemType };
 }
 
 function App() {

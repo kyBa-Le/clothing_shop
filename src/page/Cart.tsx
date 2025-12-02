@@ -1,5 +1,5 @@
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert } from "react-native";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../component/AuthContext";
 import FontAwesome6Icon from "react-native-vector-icons/FontAwesome6";
 import { CartItemType } from "../type/CartItemType";
@@ -9,19 +9,20 @@ import {
     removeCartItem,
 } from "../service/CartService";
 import { getProductById } from "../service/ProductService";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 const PRIMARY = "#f89898ff";
 
 type CartItemWithProduct = CartItemType & { productName: string; price: number };
 
 const Cart = () => {
-    const user = useContext(AuthContext)?.user;
+    const {user} = useContext(AuthContext);
     const navigation = useNavigation<any>();
     const [cartItems, setCartItems] = useState<CartItemWithProduct[]>([]);
 
     const fetchCart = async () => {
-        if (!user) return;
+        console.log("user ne", user);
+        if (user == null) return;
         const data = await getCartItemsByUserId(user.id);
 
         const enrichedData: CartItemWithProduct[] = await Promise.all(
@@ -38,9 +39,11 @@ const Cart = () => {
         setCartItems(enrichedData);
     };
 
-    useEffect(() => {
-        fetchCart();
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            fetchCart();
+        }, [user])
+    );
 
     const handleUpdateQuantity = async (item: CartItemType, delta: number) => {
         const newQuantity = item.quantity + delta;
@@ -55,13 +58,13 @@ const Cart = () => {
     };
 
     const handleCheckout = (item: CartItemWithProduct) => {
-        if (!user) {
+        if (user == null) {
             Alert.alert("Thông báo", "Vui lòng đăng nhập để mua hàng");
             navigation.navigate("Login");
             return;
         }
 
-        navigation.navigate("Checkout", { cartItems: [item] }); // single item checkout
+        navigation.navigate("Checkout", { cartItems: item });
     };
 
     if (!user) {

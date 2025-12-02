@@ -24,7 +24,7 @@ const PRIMARY = "#f89898ff";
 
 const Checkout = () => {
     const route = useRoute<CheckoutProp>();
-    const { product_id, color, size } = route.params;
+    const { product_id, color, id, size, user_id } = route.params.cartItems;
     const [product, setProduct] = useState<Product | null>(null);
     const { user } = useContext(AuthContext);
 
@@ -165,7 +165,7 @@ const Checkout = () => {
                 <View style={styles.totalBox}>
                     <Text style={styles.totalLabel}>Tổng tiền</Text>
                     <Text style={styles.totalValue}>
-                        {product ? product.price * quantity : 0} đ
+                        {(product ? product.price * quantity : 0).toLocaleString()} đ
                     </Text>
                 </View>
 

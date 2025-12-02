@@ -16,7 +16,6 @@ import { AuthContext } from './AuthContext';
 const NavigationBar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { user, setUser } = useContext(AuthContext);
-    console.log("NavigationBar user:", user);
 
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
@@ -51,7 +50,7 @@ const NavigationBar = () => {
                         Trang chủ
                     </MenuItem>
                     {user != null ? (
-                        <MenuItem onPress={handleLogout}>Đăng xuất</MenuItem>
+                            <MenuItem onPress={handleLogout}>{`Đăng xuất tài khoản: ${user?.username || ""}`}</MenuItem>
                     ) : (
                         <MenuItem onPress={() => navigateAndClose('Login')}>
                             Đăng nhập
